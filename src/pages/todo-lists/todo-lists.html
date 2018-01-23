@@ -1,0 +1,27 @@
+<!--
+  Generated template for the TodoListsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>todoLists</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <h2 style="text-align: center;">TodoLists</h2>
+
+  <ion-list no-lines>
+    <button ion-item *ngFor="let todoList of todoLists" (click)="itemSelected(todoList)">
+      {{ todoList.name }} ({{todoList.items.length}})
+    </button>
+  </ion-list>
+  <button ion-button color="secondary" round (click)="addNewTodoList()">New TodoList</button>
+
+</ion-content>
