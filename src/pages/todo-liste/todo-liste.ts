@@ -18,10 +18,10 @@ import {TodoItem} from '../../model/TodoItem';
 })
 export class TodoListePage implements OnInit {
 
-  private todoListUUid : string = '';
-  private todoList : TodoList ;
+  private todoListUUid: string = '';
+  private todoList: TodoList;
 
-  private todos : TodoItem[];
+  private todos: TodoItem[];
 
 
   ngOnInit(): void {
@@ -34,15 +34,14 @@ export class TodoListePage implements OnInit {
 
   }
 
-  constructor(public navCtrl: NavController,public alertCtrl: AlertController ,public params:NavParams , public navParams: NavParams ,public todoListService:TodoServiceProvider) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, public navParams: NavParams, public todoListService: TodoServiceProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TodoListePage');
   }
 
-  deleteItem(todoItem : TodoItem)
-  {
+  deleteItem(todoItem: TodoItem) {
 
     let confirm = this.alertCtrl.create({
       title: 'Confirmation de suppression ',
@@ -67,49 +66,83 @@ export class TodoListePage implements OnInit {
   }
 
 
-  addNewTodo(){
-      let prompt = this.alertCtrl.create({
-        title: 'Todo List name ',
-        message: "Enter a name for the new Todo",
-        inputs: [
-          {
-            name: 'name',
-            placeholder: 'Name'
-          },
-          {
-            name: 'desc',
-            placeholder: 'Description'
-          },
-        ],
-        buttons: [
-          {
-            text: 'Cancel',
-            handler: data => {
-              console.log('Add new todoList canceled');
-            }
-          },
-          {
-            text: 'Save',
-            handler: data => {
-              console.log('Add the new Todo' + data.title);
-              this.addNewTodoToList(data);
-              console.log(data.title);
-            }
+  addNewTodo() {
+    let prompt = this.alertCtrl.create({
+      title: 'Todo List name ',
+      message: "Enter a name for the new Todo",
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'Name'
+        },
+        {
+          name: 'desc',
+          placeholder: 'Description'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Add new todoList canceled');
           }
-        ]
-      });
-      prompt.present();
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            console.log('Add the new Todo' + data.title);
+            this.addNewTodoToList(data);
+            console.log(data.title);
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  editItem(todoItem, item) {
+
+    let prompt = this.alertCtrl.create({
+      title: 'Modifier TodoList',
+      message: "Entrer le nouveau nom de la TOdoList ",
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'name',
+          value: todoItem.name,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Add new todoList canceled');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            todoItem.name = data.name
+            item.close();
+            console.log('Save new TodoList' + data.title);
+          }
+        }
+      ]
+    });
+    prompt.present();
+
+
   }
 
 
-addNewTodoToList(data){
+  addNewTodoToList(data) {
 
     this.todoList.items.push({
-      uuid : "",
-      complete : false,
-      name : data.name
+      uuid: "",
+      complete: false,
+      name: data.name
     })
 
-}
+  }
 
 }

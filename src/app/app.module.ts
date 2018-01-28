@@ -13,6 +13,20 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {TodoServiceProvider} from '../services/todo-service';
 import {TodoListePageModule} from '../pages/todo-liste/todo-liste.module';
 import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
+import {AngularFireModule} from 'angularfire2';
+import {AngularFireDatabaseModule} from 'angularfire2/database';
+
+
+// AF2 Settings
+export const firebaseConfig = {
+  apiKey: "AIzaSyDCVtCiTEb2wB-hkzbe9ofisTypLIbz7m0",
+  authDomain: "todolist-6374b.firebaseapp.com",
+  databaseURL: "https://todolist-6374b.firebaseio.com",
+  projectId: "todolist-6374b",
+  storageBucket: "todolist-6374b.appspot.com",
+  messagingSenderId: "143451751699"
+};
+
 
 @NgModule({
   declarations: [
@@ -26,7 +40,9 @@ import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
     BrowserModule,
     TodoListePageModule,
     TodoListsPageModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -43,4 +59,6 @@ import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+  private static AngularFireDatabaseModle: any;
+}

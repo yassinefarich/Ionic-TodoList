@@ -17,11 +17,33 @@
 
   <h2 style="text-align: center;">TodoLists</h2>
 
-  <ion-list no-lines>
-    <button ion-item *ngFor="let todoList of todoLists" (click)="itemSelected(todoList)">
-      {{ todoList.name }} ({{todoList.items.length}})
-    </button>
+  <ion-list no-lines >
+
+    <ion-item-sliding *ngFor="let todoList of todoLists" #item>
+      <ion-item (click)="itemSelected(todoList)" >
+        {{ todoList.name }} ({{todoList.items.length}})
+      </ion-item>
+
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="deleteList(todoList)">
+          <ion-icon name="delete"></ion-icon>
+          Supprimer
+        </button>
+
+        <button ion-button (click)="editList(todoList , item)">
+          <ion-icon name="edit"></ion-icon>
+          Modifier
+        </button>
+
+      </ion-item-options>
+    </ion-item-sliding>
+
   </ion-list>
+
+
+
+
+
   <button ion-button color="secondary" round (click)="addNewTodoList()">New TodoList</button>
 
 </ion-content>

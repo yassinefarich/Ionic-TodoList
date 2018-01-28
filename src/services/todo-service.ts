@@ -3,6 +3,7 @@ import {Observable} from "rxjs/Observable";
 import 'rxjs/Rx';
 import {TodoList} from '../model/TodoList';
 import {TodoItem} from '../model/TodoItem';
+import {AngularFireDatabase} from 'angularfire2/database';
 
 
 class Guid {// credit https://gist.github.com/benjamincharity/82ce8651dd53dbee38251e150d62051c
@@ -62,12 +63,12 @@ export class TodoServiceProvider {
     }
   ];
 
-  constructor() {
+  constructor(private todosDatabase: AngularFireDatabase) {
     console.log('Hello TodoServiceProvider Provider');
   }
 
   public getList(): Observable<TodoList[]> {
-    return Observable.of(this.data);
+    return  this.todosDatabase.list('/').valueChanges();
   }
 
   public createNewTodoList(todoListName : string)
@@ -101,6 +102,16 @@ export class TodoServiceProvider {
     if (index != -1) {
       items.splice(index,1);
     }
+  }
+
+  public deleteTodoList(todoList : TodoList)
+  {
+
+    let index = this.data.findIndex(value => value.uuid == todoList.uuid);
+    if (index != -1) {
+      this.data.splice(index,1);
+    }
+    console.log("Delete me")
   }
 }
 

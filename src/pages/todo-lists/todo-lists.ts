@@ -36,7 +36,7 @@ export class TodoListsPage implements OnInit {
 
   itemSelected(todoList: TodoList) {
     console.log("A todoList Has been selected ");
-    this.navCtrl.push(TodoListePage, {'idListe': todoList.uuid });
+    this.navCtrl.push(TodoListePage, {'idListe': todoList.uuid});
   }
 
 
@@ -76,5 +76,43 @@ export class TodoListsPage implements OnInit {
     this.todoListService.createNewTodoList(name);
   }
 
+  editList(todoList, item) {
+
+    let prompt = this.alertCtrl.create({
+      title: 'Modifier TodoList',
+      message: "Entrer le nouveau nom de la TOdoList ",
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'name',
+          value: todoList.name,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Add new todoList canceled');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            todoList.name = data.name
+            item.close();
+            console.log('Save new TodoList' + data.title);
+          }
+        }
+      ]
+    });
+    prompt.present();
+
+
+  }
+
+  deleteList(todoList) {
+    this.todoListService.deleteTodoList(todoList);
+    console.log("Delete TodoList")
+  }
 
 }
