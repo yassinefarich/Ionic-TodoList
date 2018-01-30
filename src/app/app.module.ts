@@ -16,6 +16,7 @@ import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {LoginPageModule} from '../pages/login/login.module';
+import { GooglePlus } from '@ionic-native/google-plus';
 
 
 // AF2 Settings
@@ -58,6 +59,7 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     TodoServiceProvider,
+    GooglePlus,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
