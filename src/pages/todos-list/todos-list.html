@@ -17,21 +17,22 @@
 
   <h2 style="text-align: center">List : {{todoList.name}} </h2>
 
-  <ion-list no-lines >
+  <ion-list no-lines>
 
     <ion-item-sliding *ngFor="let todoItem of todos" #item>
       <ion-item>
-        {{ todoItem.name }} {{todoItem.complete}} {{todoItem.desc}}
+        <ion-label>{{ todoItem.name }}</ion-label>
+        <ion-checkbox [(ngModel)]="todoItem.complete"></ion-checkbox>
       </ion-item>
 
       <ion-item-options side="right">
         <button ion-button color="danger" (click)="deleteItem(todoItem)">
-          <ion-icon name="delete"></ion-icon>
+          <ion-icon name="trash"></ion-icon>
           Supprimer
         </button>
 
-        <button ion-button (click)="editItem(todoItem , item)">
-          <ion-icon name="edit"></ion-icon>
+        <button ion-button (click)="addOrEditItem(todoItem , item)">
+          <ion-icon name="create"></ion-icon>
           Modifier
         </button>
 
@@ -40,6 +41,12 @@
 
   </ion-list>
 
-  <button ion-button color="secondary" round (click)="addNewTodo()">New Todo</button>
+
+  <div padding>
+    <button ion-button color="primary" block (click)="addOrEditItem()">
+      <ion-icon ios="ios-add" md="md-add"></ion-icon>
+      Nouveau
+    </button>
+  </div>
 
 </ion-content>

@@ -14,7 +14,7 @@ import {TodoItem} from '../../model/TodoItem';
 @IonicPage()
 @Component({
   selector: 'page-todo-liste',
-  templateUrl: 'todo-liste.html',
+  templateUrl: 'todos-list.html',
 })
 export class TodoListePage implements OnInit {
 
@@ -66,72 +66,41 @@ export class TodoListePage implements OnInit {
   }
 
 
-  addNewTodo() {
+  addOrEditItem(todoItem?, item?) {
     let prompt = this.alertCtrl.create({
-      title: 'Todo List name ',
-      message: "Enter a name for the new Todo",
-      inputs: [
-        {
-          name: 'name',
-          placeholder: 'Name'
-        },
-        {
-          name: 'desc',
-          placeholder: 'Description'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            console.log('Add new todoList canceled');
-          }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            console.log('Add the new Todo' + data.title);
-            this.addNewTodoToList(data);
-            console.log(data.title);
-          }
-        }
-      ]
-    });
-    prompt.present();
-  }
-
-  editItem(todoItem, item) {
-
-    let prompt = this.alertCtrl.create({
-      title: 'Modifier TodoList',
-      message: "Entrer le nouveau nom de la TOdoList ",
+      title: 'Edition de Todo',
+      message: "Entrer le nouveau nom de la Todo ",
       inputs: [
         {
           name: 'name',
           placeholder: 'name',
-          value: todoItem.name,
+          value: undefined !== todoItem ? todoItem.name : '',
         },
       ],
       buttons: [
         {
           text: 'Cancel',
           handler: data => {
-            console.log('Add new todoList canceled');
+            if (undefined !== item) item.close();
           }
         },
         {
           text: 'Save',
           handler: data => {
-            todoItem.name = data.name
-            item.close();
-            console.log('Save new TodoList' + data.title);
+
+            if (undefined !== todoItem) {
+              todoItem.name = data.name
+            }
+            else {
+              this.addNewTodoToList(data);
+            }
+
+            if (undefined !== item) item.close();
           }
         }
       ]
     });
     prompt.present();
-
-
   }
 
 

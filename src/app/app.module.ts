@@ -11,10 +11,11 @@ import {TabsPage} from '../pages/tabs/tabs';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {TodoServiceProvider} from '../services/todo-service';
-import {TodoListePageModule} from '../pages/todo-liste/todo-liste.module';
+import {TodoListePageModule} from '../pages/todos-list/todos-list.module';
 import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
+import {LoginPageModule} from '../pages/login/login.module';
 
 
 // AF2 Settings
@@ -40,6 +41,7 @@ export const firebaseConfig = {
     BrowserModule,
     TodoListePageModule,
     TodoListsPageModule,
+    LoginPageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule

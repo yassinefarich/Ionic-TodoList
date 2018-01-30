@@ -13,37 +13,43 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
 
   <h2 style="text-align: center;">TodoLists</h2>
 
-  <ion-list no-lines >
+  <ion-list>
 
     <ion-item-sliding *ngFor="let todoList of todoLists" #item>
-      <ion-item (click)="itemSelected(todoList)" >
-        {{ todoList.name }} ({{todoList.items.length}})
+
+      <ion-item (click)="itemSelected(todoList)">
+        <ion-icon name="list" item-start></ion-icon>
+        {{ todoList.name }} <span class="numberOfUncompletedTodos">({{ numberOfUncompletedTodos(todoList)}})</span>
       </ion-item>
 
       <ion-item-options side="right">
+
         <button ion-button color="danger" (click)="deleteList(todoList)">
-          <ion-icon name="delete"></ion-icon>
+          <ion-icon name="trash"></ion-icon>
           Supprimer
         </button>
 
-        <button ion-button (click)="editList(todoList , item)">
-          <ion-icon name="edit"></ion-icon>
+        <button ion-button (click)="addOrEditTodoList(todoList , item)">
+          <ion-icon name="create"></ion-icon>
           Modifier
         </button>
 
       </ion-item-options>
+
     </ion-item-sliding>
 
   </ion-list>
 
+  <div padding>
+    <button ion-button color="primary" block (click)="addOrEditTodoList()">
+      <ion-icon ios="ios-add" md="md-add"></ion-icon>
+      Nouveau
+    </button>
+  </div>
 
-
-
-
-  <button ion-button color="secondary" round (click)="addNewTodoList()">New TodoList</button>
 
 </ion-content>

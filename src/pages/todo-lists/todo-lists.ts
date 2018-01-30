@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {TodoList} from '../../model/TodoList';
 import {TodoServiceProvider} from '../../services/todo-service';
-import {TodoListePage} from '../todo-liste/todo-liste';
+import {TodoListePage} from '../todos-list/todos-list';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -10,6 +10,9 @@ import {TodoListePage} from '../todo-liste/todo-liste';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
+
+const ADD_NEW_TODO_LIST_MESSAGE = ''
+
 
 @IonicPage()
 @Component({
@@ -33,86 +36,58 @@ export class TodoListsPage implements OnInit {
     console.log('ionViewDidLoad TodoListsPage');
   }
 
-
   itemSelected(todoList: TodoList) {
-    console.log("A todoList Has been selected ");
     this.navCtrl.push(TodoListePage, {'idListe': todoList.uuid});
   }
 
+  addOrEditTodoList(todoList?, item?) {
 
-  addNewTodoList() {
-
-    let prompt = this.alertCtrl.create({
-      title: 'New TodoList',
-      message: "Enter a name for the new TodoList ",
+    let addNewTodoListAlert = this.alertCtrl.create({
+      title: 'Ajouter ou Modifier un TodoList',
+      message: "Entrer le nom de la TodoList ",
       inputs: [
         {
-          name: 'title',
-          placeholder: 'Title'
+          name: 'name',
+          placeholder: 'name',
+          value: undefined !== todoList ? todoList.name : '',
         },
       ],
       buttons: [
         {
           text: 'Cancel',
           handler: data => {
-            console.log('Add new todoList canceled');
+            if (undefined !== item) item.close();
           }
         },
         {
           text: 'Save',
           handler: data => {
-            console.log('Save new TodoList' + data.title);
-            this.createNewTodoListWithName(data.title);
-            console.log(data.title);
+            if (undefined !== todoList) {
+              todoList.name = data.name
+            }
+            else {
+              this.createNewTodoListWithName(data.name);
+            }
+            if (undefined !== item) item.close();
           }
         }
       ]
     });
-    prompt.present();
-  }
+    addNewTodoListAlert.present();
 
+  }
 
   createNewTodoListWithName(name: string) {
     this.todoListService.createNewTodoList(name);
   }
 
-  editList(todoList, item) {
-
-    let prompt = this.alertCtrl.create({
-      title: 'Modifier TodoList',
-      message: "Entrer le nouveau nom de la TOdoList ",
-      inputs: [
-        {
-          name: 'name',
-          placeholder: 'name',
-          value: todoList.name,
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            console.log('Add new todoList canceled');
-          }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            todoList.name = data.name
-            item.close();
-            console.log('Save new TodoList' + data.title);
-          }
-        }
-      ]
-    });
-    prompt.present();
-
-
-  }
-
   deleteList(todoList) {
     this.todoListService.deleteTodoList(todoList);
-    console.log("Delete TodoList")
+  }
+
+
+  numberOfUncompletedTodos(todoList: TodoList): number {
+    return todoList.items.filter(x => !x.complete).length;
   }
 
 }

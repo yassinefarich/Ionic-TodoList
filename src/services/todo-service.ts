@@ -68,7 +68,8 @@ export class TodoServiceProvider {
   }
 
   public getList(): Observable<TodoList[]> {
-    return  this.todosDatabase.list('/').valueChanges();
+    return  Observable.of(this.data) ;
+    //return  this.todosDatabase.list('/').valueChanges();
   }
 
   public createNewTodoList(todoListName : string)

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoList} from '../../model/TodoList';
-import {TodoListePage} from '../todo-liste/todo-liste';
+import {TodoListePage} from '../todos-list/todos-list';
 import {TodoListsPage} from '../todo-lists/todo-lists';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 
