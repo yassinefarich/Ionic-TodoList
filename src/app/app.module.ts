@@ -11,12 +11,14 @@ import {TabsPage} from '../pages/tabs/tabs';
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {TodoServiceProvider} from '../services/todo-service';
-import {TodoListePageModule} from '../pages/todos-list/todos-list.module';
+import {ItemListPageModule} from '../pages/item-list/item-list.module';
 import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {LoginPageModule} from '../pages/login/login.module';
 import { GooglePlus } from '@ionic-native/google-plus';
+import {TodoServiceProviderFireBase} from '../providers/todo-service/todo-service-firebase';
+import {AngularFirestore, AngularFirestoreModule} from 'angularfire2/firestore';
 
 
 // AF2 Settings
@@ -40,12 +42,14 @@ export const firebaseConfig = {
   ],
   imports: [
     BrowserModule,
-    TodoListePageModule,
+    ItemListPageModule,
     TodoListsPageModule,
     LoginPageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    AngularFirestoreModule.enablePersistence()
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -59,6 +63,7 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     TodoServiceProvider,
+    TodoServiceProviderFireBase,
     GooglePlus,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

@@ -3,9 +3,10 @@ import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angula
 import {TodoList} from '../../model/TodoList';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoItem} from '../../model/TodoItem';
+import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 
 /**
- * Generated class for the TodoListePage page.
+ * Generated class for the ItemListPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -14,31 +15,32 @@ import {TodoItem} from '../../model/TodoItem';
 @IonicPage()
 @Component({
   selector: 'page-todo-liste',
-  templateUrl: 'todos-list.html',
+  templateUrl: 'item-list.html',
 })
-export class TodoListePage implements OnInit {
+export class ItemListPage implements OnInit {
 
   private todoListUUid: string = '';
-  private todoList: TodoList;
+  private todoListName: string = 'TodoListNAme';
 
   private todos: TodoItem[];
 
 
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
-    this.todoList = this.todoListService.getTodoListByUUID(this.todoListUUid);
+    //this.todoListName = 'TodoListName';
+    //this.todoListService.getTodoListByUUID(this.todoListUUid);
 
-    this.todoListService.getTodos(this.todoListUUid).subscribe(x => {
+    this.todoListService.getTodosAsObservable(this.todoListUUid).subscribe(x => {
       this.todos = x;
     });
 
   }
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, public navParams: NavParams, public todoListService: TodoServiceProvider) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, public navParams: NavParams, public todoListService: TodoServiceProviderFireBase) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TodoListePage');
+    console.log('ionViewDidLoad ItemListPage');
   }
 
   deleteItem(todoItem: TodoItem) {
@@ -89,10 +91,12 @@ export class TodoListePage implements OnInit {
           handler: data => {
 
             if (undefined !== todoItem) {
-              todoItem.name = data.name
+              todoItem.name = data.name ;
+              this.todoListService.updateTodo(this.todoListUUid , todoItem)
             }
             else {
-              this.addNewTodoToList(data);
+              this.todoListService.createNewTodo(this.todoListUUid ,
+                {name : data.name , complete : false , uuid : '0'})
             }
 
             if (undefined !== item) item.close();
@@ -101,17 +105,6 @@ export class TodoListePage implements OnInit {
       ]
     });
     prompt.present();
-  }
-
-
-  addNewTodoToList(data) {
-
-    this.todoList.items.push({
-      uuid: "",
-      complete: false,
-      name: data.name
-    })
-
   }
 
 }

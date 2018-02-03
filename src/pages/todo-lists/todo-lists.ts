@@ -2,7 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {TodoList} from '../../model/TodoList';
 import {TodoServiceProvider} from '../../services/todo-service';
-import {TodoListePage} from '../todos-list/todos-list';
+import {ItemListPage} from '../item-list/item-list';
+import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
+import {TodoItem} from '../../model/TodoItem';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -10,8 +12,6 @@ import {TodoListePage} from '../todos-list/todos-list';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
-const ADD_NEW_TODO_LIST_MESSAGE = ''
 
 
 @IonicPage()
@@ -29,7 +29,7 @@ export class TodoListsPage implements OnInit {
     })
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private todoListService: TodoServiceProvider, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private todoListService: TodoServiceProviderFireBase, public alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -37,7 +37,7 @@ export class TodoListsPage implements OnInit {
   }
 
   itemSelected(todoList: TodoList) {
-    this.navCtrl.push(TodoListePage, {'idListe': todoList.uuid});
+    this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid});
   }
 
   addOrEditTodoList(todoList?, item?) {
@@ -87,7 +87,12 @@ export class TodoListsPage implements OnInit {
 
 
   numberOfUncompletedTodos(todoList: TodoList): number {
-    return todoList.items.filter(x => !x.complete).length;
+    //TODO : This is a bad function :( , re-check it please
+    if (undefined == todoList.items) return 0;
+    var itemsAsArray: TodoItem[] = Object.keys(todoList.items)
+      .map(key => todoList.items[key]);
+
+    return itemsAsArray.filter(x => !x.complete).length;
   }
 
 }
