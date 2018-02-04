@@ -1,14 +1,10 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { GooglePlus } from '@ionic-native/google-plus';
+import {Component, Injector} from '@angular/core';
+import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {GooglePlus} from '@ionic-native/google-plus';
 import firebase from 'firebase';
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import {ToDoAppGoogleAuthProvider} from '../../providers/google-auth/google-auth';
+import {GoogleWebAuthProvider} from '../../providers/google-auth/google-web-auth';
+import {GooglePlusAuthProvider} from '../../providers/google-auth/google-plus-auth';
 
 @IonicPage()
 @Component({
@@ -17,43 +13,52 @@ import firebase from 'firebase';
 })
 export class LoginPage {
 
+  private userProfile: any = null;
+  private authProvider: ToDoAppGoogleAuthProvider;
 
-  userProfile: any = null;
-  simulatedConsole : string = 'Hello';
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, private injector: Injector) {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private googlePlus: GooglePlus) {
+    this.injectAuthProvider();
 
-    firebase.auth().onAuthStateChanged( user => {
-      if (user){
+    this.authProvider.getFirebaseAuth().onAuthStateChanged(user => {
+      if (user) {
         this.userProfile = user;
       } else {
         this.userProfile = null;
       }
     });
+
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+  /**
+   * Inject The AuthentificationProvider depending on platform type :
+   *    - authProvider <- GoogleWeb Authentification , if the platform is Web Browser
+   *    - authProvider <- GooglePlus Authentification , if the platform is Mobile(Android/IOS)
+   */
+  private injectAuthProvider() {
+    if (this.appIsRunningOnWebBrowser()) {
+      this.authProvider = this.injector.get(GoogleWebAuthProvider);
+    }
+    else {
+      this.authProvider = this.injector.get(GooglePlusAuthProvider);
+    }
   }
 
-  loginUser(): void {
-    this.googlePlus.login({
-      'webClientId': '143451751699-i0l7oqlottrluaaol7cdqudbcb531m12.apps.googleusercontent.com',
-      'offline': true
-    }).then( res => {
-            const googleCredential = firebase.auth.GoogleAuthProvider.credential(res.idToken);
-   
-            firebase.auth().signInWithCredential(googleCredential).then( response => {
-              console.log("Firebase success: " + JSON.stringify(response));
-              this.simulatedConsole = "Firebase success: " + JSON.stringify(response) ;
-            
-            
-            });
-    }, err => {
-        console.error("Error: ", err)
-        this.simulatedConsole = "Error: "+ err ;
-    });
+  private appIsRunningOnWebBrowser(): boolean {
+    return this.platform.is('core') || this.platform.is('mobileweb');
   }
 
+  logOut() {
+    if (null != this.authProvider) {
+      this.authProvider.logOut();
+    }
+  }
+
+  logIn()
+  {
+    if (null != this.authProvider) {
+      this.authProvider.logIn();
+    }
+  }
 
 }

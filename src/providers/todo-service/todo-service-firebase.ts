@@ -25,19 +25,19 @@ export class TodoServiceProviderFireBase {
   }
 
   public createNewTodoList(todoListName: string) {
+    let newTodoList: TodoList = this.makeNewTodoList(todoListName);
+    const newTodoListKey = this.data.push(newTodoList).key;
+    newTodoList.uuid = newTodoListKey;
+    this.data.update(newTodoListKey, newTodoList)
 
-    let newTodoList: TodoList =
-      {
-        uuid: '0',
-        name: todoListName,
-        items: new Array<TodoItem>()
-      };
+  }
 
-    const createdTodoListKey = this.data.push(newTodoList).key;
-    newTodoList.uuid = createdTodoListKey;
-
-    this.data.update(createdTodoListKey, newTodoList)
-
+  private makeNewTodoList(todoListName: string): TodoList {
+    return {
+      uuid: '0',
+      name: todoListName,
+      items: new Array<TodoItem>()
+    };
   }
 
 

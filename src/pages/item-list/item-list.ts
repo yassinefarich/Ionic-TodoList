@@ -107,4 +107,9 @@ export class ItemListPage implements OnInit {
     prompt.present();
   }
 
+  markItemAsCompleted(todoItem : TodoItem)
+  {
+    this.todoListService.updateTodo(this.todoListUUid , todoItem)
+  }
+
 }

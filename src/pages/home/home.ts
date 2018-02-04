@@ -5,12 +5,13 @@ import {TodoList} from '../../model/TodoList';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoListsPage} from '../todo-lists/todo-lists';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
+import {LoginPage} from '../login/login';
 
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers : [TodoServiceProvider]
+  providers: [TodoServiceProvider]
 })
 export class HomePage implements OnInit {
 
@@ -31,7 +32,7 @@ export class HomePage implements OnInit {
   }
 
 
-  constructor(public navCtrl: NavController, private todoListService: TodoServiceProvider , private todosDatabase: AngularFireDatabase) {
+  constructor(public navCtrl: NavController, private todoListService: TodoServiceProvider, private todosDatabase: AngularFireDatabase) {
 
   }
 
@@ -40,5 +41,9 @@ export class HomePage implements OnInit {
     this.navCtrl.push(TodoListsPage);
   }
 
+
+  showLoginPage() {
+    this.navCtrl.push(LoginPage);
+  }
 
 }

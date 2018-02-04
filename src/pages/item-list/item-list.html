@@ -22,7 +22,7 @@
     <ion-item-sliding *ngFor="let todoItem of todos" #item>
       <ion-item>
         <ion-label>{{ todoItem.name }}</ion-label>
-        <ion-checkbox [(ngModel)]="todoItem.complete"></ion-checkbox>
+        <ion-checkbox [(ngModel)]="todoItem.complete" (ionChange)="markItemAsCompleted(todoItem)"></ion-checkbox>
       </ion-item>
 
       <ion-item-options side="right">
@@ -43,8 +43,8 @@
 
 
   <div padding>
-    <button ion-button color="primary" block (click)="addOrEditItem()">
-      <ion-icon ios="ios-add" md="md-add"></ion-icon>
+    <button ion-button color="primary" block (click)="addOrEditItem()" icon-start >
+      <ion-icon ios="ios-add-circle-outline" md="md-add" ></ion-icon>
       Nouveau
     </button>
   </div>

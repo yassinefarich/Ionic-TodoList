@@ -23,7 +23,7 @@
 
       <ion-item (click)="itemSelected(todoList)">
         <ion-icon name="list" item-start></ion-icon>
-        {{ todoList.name }} <span class="numberOfUncompletedTodos">({{ numberOfUncompletedTodos(todoList)}})</span>
+        {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
       </ion-item>
 
       <ion-item-options side="right">
@@ -45,7 +45,7 @@
   </ion-list>
 
   <div padding>
-    <button ion-button color="primary" block (click)="addOrEditTodoList()">
+    <button ion-button color="primary" block (click)="addOrEditTodoList()" icon-start >
       <ion-icon ios="ios-add" md="md-add"></ion-icon>
       Nouveau
     </button>
