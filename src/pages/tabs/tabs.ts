@@ -6,7 +6,7 @@ import { HomePage } from '../home/home';
 import {TodoList} from '../../model/TodoList';
 import {TodoListsPage} from '../todo-lists/todo-lists';
 import {LoginPage} from '../login/login';
-import {WebAuthPage} from '../web-auth/web-auth';
+import {WebAuthPage} from '../web-auth/simple-auth';
 
 @Component({
   templateUrl: 'tabs.html'

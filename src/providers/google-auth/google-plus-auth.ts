@@ -12,7 +12,7 @@ const NATIVE_AUTH_OPTION = {
 @Injectable()
 export class GooglePlusAuthProvider extends ToDoAppGoogleAuthProvider {
 
-  //TODO look for how to replace this variable with real console
+  //TODO: look for how to replace this variable with real console
   private simulatedConsole = '';
 
   constructor(private googlePlus: GooglePlus) {

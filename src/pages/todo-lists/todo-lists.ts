@@ -5,6 +5,7 @@ import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {TodoItem} from '../../model/TodoItem';
+import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -29,7 +30,10 @@ export class TodoListsPage implements OnInit {
     })
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private todoListService: TodoServiceProviderFireBase, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private todoListService: TodoServiceProviderFireBase,
+              private sharedAlertProvider: SharedAlertProvider) {
   }
 
   ionViewDidLoad() {
@@ -42,52 +46,65 @@ export class TodoListsPage implements OnInit {
 
   addOrEditTodoList(todoList?, item?) {
 
-    let addNewTodoListAlert = this.alertCtrl.create({
-      title: 'Ajouter ou Modifier un TodoList',
-      message: "Entrer le nom de la TodoList ",
-      inputs: [
-        {
+    let prompt = null;
+    if (undefined !== todoList) {
+
+      prompt = this.sharedAlertProvider
+        .buildPromptAlert()
+        .withTitle('Modification de la TodoList')
+        .withMessage('Veuillez entrer les informations de la TodoList')
+        .withInputs([{
           name: 'name',
           placeholder: 'name',
-          value: undefined !== todoList ? todoList.name : '',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            if (undefined !== item) item.close();
-          }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            if (undefined !== todoList) {
-              todoList.name = data.name
-            }
-            else {
-              this.createNewTodoListWithName(data.name);
-            }
-            if (undefined !== item) item.close();
-          }
-        }
-      ]
-    });
-    addNewTodoListAlert.present();
+          value: todoList.name,
+        }])
+        .withOnOkHandler(data => {
+          todoList.name = data.name;
+          item.close();
+        })
+        .withOnCancelHandler(data => {
+          item.close();
+        })
+        .build()
+    }
+    else {
+      prompt = this.sharedAlertProvider
+        .buildPromptAlert()
+        .withTitle('Ajouter un nouveau TodoList')
+        .withMessage('Veuillez entrer les informations de la TodoList')
+        .withInputs([{
+          name: 'name',
+          placeholder: 'name',
+          value: '',
+        }])
+        .withOnOkHandler(data => {
+          this.todoListService.createNewTodoList(data.name);
+        })
+        .withOnCancelHandler(data => {
+        })
+        .build()
+    }
+
+    prompt.present();
+
 
   }
 
-  createNewTodoListWithName(name: string) {
-    this.todoListService.createNewTodoList(name);
-  }
 
   deleteList(todoList) {
-    this.todoListService.deleteTodoList(todoList);
+
+    this.sharedAlertProvider
+      .buildConfirmationAlert()
+      .withTitle('Confirmation de suppression')
+      .withMessage('Veuillez confirmer la suppression de la liste ?')
+      .withOnOkHandler(() => this.todoListService.deleteTodoList(todoList))
+      .build()
+      .present();
   }
 
 
   numberOfUncompletedTodos(todoList: TodoList): number {
-    //TODO : This is a bad function :( , re-check it please
+    //TODO : This is a baaaad function :( , re-check it please
     if (undefined == todoList.items) return 0;
     var itemsAsArray: TodoItem[] = Object.keys(todoList.items)
       .map(key => todoList.items[key]);

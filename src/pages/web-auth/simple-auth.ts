@@ -7,7 +7,7 @@ import firebase from 'firebase';
 @IonicPage()
 @Component({
   selector: 'page-web-auth',
-  templateUrl: 'web-auth.html',
+  templateUrl: 'simple-auth.html',
 })
 //TODO : !!!! This component is never user please delete It
 export class WebAuthPage {
