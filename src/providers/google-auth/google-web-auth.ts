@@ -13,11 +13,11 @@ export class GoogleWebAuthProvider extends ToDoAppGoogleAuthProvider {
   }
 
   logIn() {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
   logOut() {
-    this.afAuth.auth.signOut();
+    return this.afAuth.auth.signOut();
   }
 
 

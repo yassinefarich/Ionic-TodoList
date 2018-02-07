@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {TodoList} from '../../model/TodoList';
+import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
-import {TodoItem, TodoItemFactory} from '../../model/TodoItem';
+import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 
@@ -20,8 +20,8 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 })
 export class ItemListPage implements OnInit {
 
-  private todoListUUid: string = '';
-  private todoListName: string = 'TodoListNAme';
+  private todoListUUid = '';
+  private todoListName = 'TodoListName';
 
   private todos: TodoItem[];
 
@@ -29,7 +29,7 @@ export class ItemListPage implements OnInit {
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
     this.todoListName = this.params.get('listName');
-    //this.todoListService.getTodoListByUUID(this.todoListUUid);
+    // this.todoListService.getTodoListByUUID(this.todoListUUid);
 
     this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
       this.todos = x;
@@ -64,10 +64,10 @@ export class ItemListPage implements OnInit {
 
   addOrEditItem(todoItem?, item?) {
 
-    //TODO: Look How to avoir null using NullObjectPattern on Typescript
+    // TODO: Look How to avoir null using NullObjectPattern on Typescript
     let prompt = null;
 
-    //Modification d'un Item
+    // Modification d'un Item
     if (undefined !== todoItem) {
 
       prompt = this.sharedAlertProvider
@@ -87,11 +87,9 @@ export class ItemListPage implements OnInit {
         .withOnCancelHandler(data => {
           item.close();
         })
-        .build()
-    }
-    //Creation d'un nouveau Item
-    else {
-
+        .build();
+    } else {
+      // Creation d'un nouveau Item
       prompt = this.sharedAlertProvider
         .buildPromptAlert()
         .withTitle('Ajouter un nouveau Item')
@@ -106,17 +104,14 @@ export class ItemListPage implements OnInit {
         })
         .withOnCancelHandler(data => {
         })
-        .build()
+        .build();
     }
 
     prompt.present();
-
-
   }
 
-
   markItemAsCompleted(todoItem: TodoItem) {
-    this.todoListService.updateTodo(this.todoListUUid, todoItem)
+    this.todoListService.updateTodo(this.todoListUUid, todoItem);
   }
 
 }

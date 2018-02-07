@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {TodoList} from '../../model/TodoList';
+import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
-import {TodoItem} from '../../model/TodoItem';
+import {TodoItem} from '../../model/todo-item';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 
 /**
@@ -26,8 +26,8 @@ export class TodoListsPage implements OnInit {
 
   ngOnInit(): void {
     this.todoListService.getList().subscribe(x => {
-      this.todoLists = x
-    })
+      this.todoLists = x;
+    });
   }
 
   constructor(public navCtrl: NavController,
@@ -41,14 +41,13 @@ export class TodoListsPage implements OnInit {
   }
 
   itemSelected(todoList: TodoList) {
-    this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid , 'listName' : todoList.name});
+    this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid, 'listName': todoList.name});
   }
 
   addOrEditTodoList(todoList?, item?) {
 
     let prompt = null;
     if (undefined !== todoList) {
-
       prompt = this.sharedAlertProvider
         .buildPromptAlert()
         .withTitle('Modification de la TodoList')
@@ -66,9 +65,8 @@ export class TodoListsPage implements OnInit {
         .withOnCancelHandler(data => {
           item.close();
         })
-        .build()
-    }
-    else {
+        .build();
+    } else {
       prompt = this.sharedAlertProvider
         .buildPromptAlert()
         .withTitle('Ajouter un nouveau TodoList')
@@ -83,12 +81,10 @@ export class TodoListsPage implements OnInit {
         })
         .withOnCancelHandler(data => {
         })
-        .build()
+        .build();
     }
 
     prompt.present();
-
-
   }
 
 
@@ -105,12 +101,14 @@ export class TodoListsPage implements OnInit {
 
 
   numberOfUncompletedTodos(todoList: TodoList): number {
-    //TODO : This is a baaaad function :( , re-check it please
-    if (undefined == todoList.items) return 0;
-    var itemsAsArray: TodoItem[] = Object.keys(todoList.items)
-      .map(key => todoList.items[key]);
+    // TODO : This is a baaaad function :( , re-check it please
 
-    return itemsAsArray.filter(x => !x.complete).length;
+    if (undefined !== todoList.items) {
+      const itemsAsArray: TodoItem[] = Object.keys(todoList.items)
+        .map(key => todoList.items[key]);
+      return itemsAsArray.filter(x => !x.complete).length;
+    }
+    return 0;
   }
 
 }

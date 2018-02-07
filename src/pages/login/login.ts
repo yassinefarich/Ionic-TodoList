@@ -38,8 +38,7 @@ export class LoginPage {
   private injectAuthProvider() {
     if (this.appIsRunningOnWebBrowser()) {
       this.authProvider = this.injector.get(GoogleWebAuthProvider);
-    }
-    else {
+    } else {
       this.authProvider = this.injector.get(GooglePlusAuthProvider);
     }
   }

@@ -12,7 +12,7 @@ const NATIVE_AUTH_OPTION = {
 @Injectable()
 export class GooglePlusAuthProvider extends ToDoAppGoogleAuthProvider {
 
-  //TODO: look for how to replace this variable with real console
+  // TODO: look for how to replace this variable with real console
   private simulatedConsole = '';
 
   constructor(private googlePlus: GooglePlus) {
@@ -26,17 +26,17 @@ export class GooglePlusAuthProvider extends ToDoAppGoogleAuthProvider {
       .then(res => {
         const googleCredential = firebase.auth.GoogleAuthProvider.credential(res.idToken);
         firebase.auth().signInWithCredential(googleCredential).then(response => {
-          console.log("Firebase success: " + JSON.stringify(response));
-          this.simulatedConsole = "Firebase success: " + JSON.stringify(response);
+          console.log('Firebase success: ' + JSON.stringify(response));
+          this.simulatedConsole = 'Firebase success: ' + JSON.stringify(response);
         });
       }, err => {
-        console.error("Error: ", err)
-        this.simulatedConsole = "Error: " + err;
+        console.error('Error: ', err)
+        this.simulatedConsole = 'Error: ' + err;
       });
   }
 
   logOut() {
-    this.googlePlus.logout();
+    return this.googlePlus.logout();
   }
 
 

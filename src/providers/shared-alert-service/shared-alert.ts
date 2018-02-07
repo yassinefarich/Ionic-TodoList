@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {Injectable, Injector} from '@angular/core';
 import {AlertController} from 'ionic-angular';
 
@@ -115,9 +114,7 @@ export class PromptAlertBuilder {
     return this;
   }
 
-
   public build() {
-
     return this.alertCtrl.create({
       title: this.title,
       message: this.message,
@@ -133,7 +130,6 @@ export class PromptAlertBuilder {
         }
       ]
     });
-
 
   }
 }

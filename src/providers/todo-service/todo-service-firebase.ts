@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
-import {TodoList, TodoListFactory} from '../../model/TodoList';
-import {TodoItem} from '../../model/TodoItem';
+import {TodoList, TodoListFactory} from '../../model/todo-list';
+import {TodoItem} from '../../model/todo-item';
+import {GooglePlusAuthProvider} from '../google-auth/google-plus-auth';
 
 
-//Root node without slash at the end
-const ROOT_NODE = '';
+const DEFAULT_ROOT_NODE = '/default'
 
 /**
  * UUid Generator Credit to :
@@ -30,18 +30,35 @@ function generateUUID() { // Public Domain/MIT
 export class TodoServiceProviderFireBase {
 
   private data: AngularFireList<TodoList>;
+  private rootNode: string = null;
 
-  constructor(private angularFireDatabase: AngularFireDatabase) {
+
+// TODO : GooglePlusAuthProvider
+  constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: GooglePlusAuthProvider) {
+  }
+
+  private getRootNode() {
+
+    if (null === this.rootNode) {
+      const fireBaseAuth = this.authProvider.getFirebaseAuth().currentUser;
+
+      this.rootNode = null === fireBaseAuth ? DEFAULT_ROOT_NODE :
+        fireBaseAuth.email
+          .replace('@', '_')
+          .replace('.', '_');
+
+    }
+    return this.rootNode;
   }
 
   public getList(): Observable<any> {
-    this.data = this.angularFireDatabase.list(`${ROOT_NODE}/`);
+    this.data = this.angularFireDatabase.list(`${this.getRootNode()}/`);
 
     return this.data.valueChanges();
   }
 
   public createNewTodoList(todoListName: string) {
-    let newTodoList: TodoList = TodoListFactory
+    const newTodoList: TodoList = TodoListFactory
       .createNewWithNameAndUUid(todoListName, generateUUID());
     return this.data.set(newTodoList.uuid, newTodoList);
   }
@@ -55,11 +72,11 @@ export class TodoServiceProviderFireBase {
   }
 
   public getTodoItems(uuid: string): AngularFireList<TodoItem> {
-    return this.angularFireDatabase.list<TodoItem>(`${ROOT_NODE}/${uuid}/items`);
+    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`);
   }
 
   public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
-    return this.angularFireDatabase.list<TodoItem>(`${ROOT_NODE}/${uuid}/items`)
+    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`)
       .valueChanges();
   }
 
