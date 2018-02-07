@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>todoListe</ion-title>
+    <ion-title>Ma liste des Todo</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,8 +15,8 @@
 
 <ion-content padding>
 
-  <h2 style="text-align: center">List : {{todoListName}} </h2>
 
+  <h2 style="text-align: center ; color: #488aff">{{todoListName}} </h2>
   <ion-list no-lines>
 
     <ion-item-sliding *ngFor="let todoItem of todos" #item>

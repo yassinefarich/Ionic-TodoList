@@ -41,7 +41,7 @@ export class TodoListsPage implements OnInit {
   }
 
   itemSelected(todoList: TodoList) {
-    this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid});
+    this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid , 'listName' : todoList.name});
   }
 
   addOrEditTodoList(todoList?, item?) {
@@ -60,6 +60,7 @@ export class TodoListsPage implements OnInit {
         }])
         .withOnOkHandler(data => {
           todoList.name = data.name;
+          this.todoListService.updateTodoList(todoList);
           item.close();
         })
         .withOnCancelHandler(data => {

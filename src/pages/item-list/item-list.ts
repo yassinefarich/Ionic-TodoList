@@ -28,10 +28,10 @@ export class ItemListPage implements OnInit {
 
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
-    //this.todoListName = 'TodoListName';
+    this.todoListName = this.params.get('listName');
     //this.todoListService.getTodoListByUUID(this.todoListUUid);
 
-    this.todoListService.getTodosAsObservable(this.todoListUUid).subscribe(x => {
+    this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
       this.todos = x;
     });
 

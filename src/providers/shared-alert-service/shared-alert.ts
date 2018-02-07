@@ -23,7 +23,6 @@ export class SharedAlertProvider {
     return this.injector.get(PromptAlertBuilder)
   }
 
-
 }
 
 

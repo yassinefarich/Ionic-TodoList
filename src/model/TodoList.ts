@@ -7,10 +7,10 @@ export interface TodoList {
 }
 
 export class TodoListFactory {
-  static createNewWithName(todoListName : string) : TodoList
+  static createNewWithNameAndUUid(todoListName : string , uuid : string) : TodoList
   {
     return {
-      uuid: '0',
+      uuid: uuid,
       name: todoListName,
       items: new Array<TodoItem>()
     };
