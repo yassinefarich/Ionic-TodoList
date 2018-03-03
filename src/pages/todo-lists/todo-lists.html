@@ -44,12 +44,10 @@
 
   </ion-list>
 
-  <div padding>
-    <button ion-button color="primary" block (click)="addOrEditTodoList()" icon-start >
-      <ion-icon ios="ios-add" md="md-add"></ion-icon>
-      Nouveau
-    </button>
-  </div>
+
+  <ion-fab right bottom style="padding-right: 2%;" >
+    <button ion-fab  color="primary" (click)="addOrEditTodoList()" ><ion-icon name="md-add"></ion-icon></button>
+  </ion-fab>
 
 
 </ion-content>

@@ -47,11 +47,9 @@
   </ion-list>
 
 
-  <div padding>
-    <button ion-button color="primary" block (click)="addOrEditItem()" icon-start>
-      <ion-icon ios="ios-add-circle-outline" md="md-add"></ion-icon>
-      Nouveau
-    </button>
-  </div>
+  <ion-fab right bottom style="padding-right: 2%;" >
+    <button ion-fab  color="primary" (click)="addOrEditItem()" ><ion-icon name="md-add"></ion-icon></button>
+  </ion-fab>
+
 
 </ion-content>
