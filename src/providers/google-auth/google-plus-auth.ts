@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {GooglePlus} from '@ionic-native/google-plus';
 import firebase from 'firebase';
 import {ToDoAppGoogleAuthProvider} from './google-auth';
+import {GoogleAuthInterface} from './google-auth-i';
 
 const NATIVE_AUTH_OPTION = {
   'webClientId': '143451751699-i0l7oqlottrluaaol7cdqudbcb531m12.apps.googleusercontent.com',
@@ -10,18 +11,16 @@ const NATIVE_AUTH_OPTION = {
 };
 
 @Injectable()
-export class GooglePlusAuthProvider extends ToDoAppGoogleAuthProvider {
+export class GooglePlusAuthProvider implements GoogleAuthInterface {
 
-  // TODO: look for how to replace this variable with real console
   private simulatedConsole = '';
 
   constructor(private googlePlus: GooglePlus) {
-    super();
     console.log('Hello ToDoAppGoogleAuthProvider Provider');
   }
 
-  logIn(): void {
-    this.googlePlus
+  logIn(): Promise<any> {
+    return this.googlePlus
       .login(NATIVE_AUTH_OPTION)
       .then(res => {
         const googleCredential = firebase.auth.GoogleAuthProvider.credential(res.idToken);
@@ -35,7 +34,7 @@ export class GooglePlusAuthProvider extends ToDoAppGoogleAuthProvider {
       });
   }
 
-  logOut() {
+  logOut(): Promise<any> {
     return this.googlePlus.logout();
   }
 

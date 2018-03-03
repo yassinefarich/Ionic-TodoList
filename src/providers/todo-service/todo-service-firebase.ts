@@ -5,6 +5,7 @@ import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
 import {GooglePlusAuthProvider} from '../google-auth/google-plus-auth';
+import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
 
 const DEFAULT_ROOT_NODE = '/default'
@@ -34,7 +35,7 @@ export class TodoServiceProviderFireBase {
 
 
 // TODO : GooglePlusAuthProvider
-  constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: GooglePlusAuthProvider) {
+  constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: ToDoAppGoogleAuthProvider) {
   }
 
   private getRootNode() {

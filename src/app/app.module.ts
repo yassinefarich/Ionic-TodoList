@@ -81,6 +81,7 @@ export const firebaseConfig = {
     GooglePlusAuthProvider,
     GoogleWebAuthProvider,
     SharedAlertProvider,
+    ToDoAppGoogleAuthProvider,
     ConfirmationAlertBuilder,
     PromptAlertBuilder,
   ]
