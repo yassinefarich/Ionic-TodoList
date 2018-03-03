@@ -51,7 +51,7 @@ export class ItemListPage implements OnInit {
 
   deleteItem(todoItem: TodoItem) {
 
-    this.sharedAlertProvider
+    return this.sharedAlertProvider
       .buildConfirmationAlert()
       .withTitle('Confirmation de suppression')
       .withMessage('Veuillez confirmer la suppression de l item ?')
