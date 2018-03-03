@@ -7,17 +7,17 @@ import {ToDoAppGoogleAuthProvider} from './google-auth';
 @Injectable()
 export class GoogleWebAuthProvider extends ToDoAppGoogleAuthProvider {
 
-  constructor(public afAuth: AngularFireAuth,) {
+  constructor(public afAuth: AngularFireAuth) {
     super();
     console.log('Hello ToDoAppGoogleAuthProvider Provider');
   }
 
   logIn() {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
   logOut() {
-    this.afAuth.auth.signOut();
+    return this.afAuth.auth.signOut();
   }
 
 

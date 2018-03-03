@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {TodoList} from '../../model/TodoList';
+import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
-import {TodoItem} from '../../model/TodoItem';
+import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
+import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 
 /**
  * Generated class for the ItemListPage page.
@@ -19,24 +20,29 @@ import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-ser
 })
 export class ItemListPage implements OnInit {
 
-  private todoListUUid: string = '';
-  private todoListName: string = 'TodoListNAme';
+  private todoListUUid = '';
+  private todoListName = 'TodoListName';
 
   private todos: TodoItem[];
 
 
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
-    //this.todoListName = 'TodoListName';
-    //this.todoListService.getTodoListByUUID(this.todoListUUid);
+    this.todoListName = this.params.get('listName');
+    // this.todoListService.getTodoListByUUID(this.todoListUUid);
 
-    this.todoListService.getTodosAsObservable(this.todoListUUid).subscribe(x => {
+    this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
       this.todos = x;
     });
 
   }
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, public navParams: NavParams, public todoListService: TodoServiceProviderFireBase) {
+  constructor(public navCtrl: NavController,
+              public alertCtrl: AlertController,
+              public params: NavParams,
+              public navParams: NavParams,
+              public todoListService: TodoServiceProviderFireBase,
+              public sharedAlertProvider: SharedAlertProvider) {
   }
 
   ionViewDidLoad() {
@@ -45,71 +51,67 @@ export class ItemListPage implements OnInit {
 
   deleteItem(todoItem: TodoItem) {
 
-    let confirm = this.alertCtrl.create({
-      title: 'Confirmation de suppression ',
-      message: 'Veuillez confirmer la suppression de l item ?',
-      buttons: [
-        {
-          text: 'Annuler',
-          handler: () => {
-            console.log('Disagree clicked');
-          }
-        },
-        {
-          text: 'OK',
-          handler: () => {
-            this.todoListService.deleteTodo(this.todoListUUid, todoItem.uuid)
-            console.log('Agree clicked');
-          }
-        }
-      ]
-    });
-    confirm.present();
+    return this.sharedAlertProvider
+      .buildConfirmationAlert()
+      .withTitle('Confirmation de suppression')
+      .withMessage('Veuillez confirmer la suppression de l item ?')
+      .withOnOkHandler(() => this.todoListService.deleteTodo(this.todoListUUid, todoItem.uuid))
+      .build()
+      .present();
+
   }
 
 
   addOrEditItem(todoItem?, item?) {
-    let prompt = this.alertCtrl.create({
-      title: 'Edition de Todo',
-      message: "Entrer le nouveau nom de la Todo ",
-      inputs: [
-        {
+
+    // TODO: Look How to avoir null using NullObjectPattern on Typescript
+    let prompt = null;
+
+    // Modification d'un Item
+    if (undefined !== todoItem) {
+
+      prompt = this.sharedAlertProvider
+        .buildPromptAlert()
+        .withTitle('Modification de l\'Item')
+        .withMessage('Veuillez entrer les informations de l\'Item')
+        .withInputs([{
           name: 'name',
           placeholder: 'name',
-          value: undefined !== todoItem ? todoItem.name : '',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            if (undefined !== item) item.close();
-          }
-        },
-        {
-          text: 'Save',
-          handler: data => {
+          value: todoItem.name,
+        }])
+        .withOnOkHandler(data => {
+          todoItem.name = data.name;
+          this.todoListService.updateTodo(this.todoListUUid, todoItem)
+          item.close();
+        })
+        .withOnCancelHandler(data => {
+          item.close();
+        })
+        .build();
+    } else {
+      // Creation d'un nouveau Item
+      prompt = this.sharedAlertProvider
+        .buildPromptAlert()
+        .withTitle('Ajouter un nouveau Item')
+        .withMessage('Veuillez entrer les informations de l\'Item')
+        .withInputs([{
+          name: 'name',
+          placeholder: 'name',
+          value: '',
+        }])
+        .withOnOkHandler(data => {
+          this.todoListService.createNewTodo(this.todoListUUid, TodoItemFactory.createNewWithName(data.name))
+        })
+        .withOnCancelHandler(data => {
+        })
+        .build();
+    }
 
-            if (undefined !== todoItem) {
-              todoItem.name = data.name ;
-              this.todoListService.updateTodo(this.todoListUUid , todoItem)
-            }
-            else {
-              this.todoListService.createNewTodo(this.todoListUUid ,
-                {name : data.name , complete : false , uuid : '0'})
-            }
-
-            if (undefined !== item) item.close();
-          }
-        }
-      ]
-    });
     prompt.present();
   }
 
-  markItemAsCompleted(todoItem : TodoItem)
-  {
-    this.todoListService.updateTodo(this.todoListUUid , todoItem)
+  markItemAsCompleted(todoItem: TodoItem) {
+    this.todoListService.updateTodo(this.todoListUUid, todoItem);
   }
 
 }

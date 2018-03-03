@@ -19,12 +19,16 @@ import {LoginPageModule} from '../pages/login/login.module';
 import { GooglePlus } from '@ionic-native/google-plus';
 import {TodoServiceProviderFireBase} from '../providers/todo-service/todo-service-firebase';
 import {AngularFirestore, AngularFirestoreModule} from 'angularfire2/firestore';
-import {WebAuthPage} from '../pages/web-auth/web-auth';
-import {WebAuthPageModule} from '../pages/web-auth/web-auth.module';
+import {WebAuthPage} from '../pages/web-auth/simple-auth';
+import {WebAuthPageModule} from '../pages/web-auth/simple-auth.module';
 import {AngularFireAuth} from 'angularfire2/auth';
 import { ToDoAppGoogleAuthProvider } from '../providers/google-auth/google-auth';
 import {GooglePlusAuthProvider} from '../providers/google-auth/google-plus-auth';
 import {GoogleWebAuthProvider} from '../providers/google-auth/google-web-auth';
+import {
+  ConfirmationAlertBuilder, PromptAlertBuilder,
+  SharedAlertProvider
+} from '../providers/shared-alert-service/shared-alert';
 
 
 // AF2 Settings
@@ -76,6 +80,9 @@ export const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GooglePlusAuthProvider,
     GoogleWebAuthProvider,
+    SharedAlertProvider,
+    ConfirmationAlertBuilder,
+    PromptAlertBuilder,
   ]
 })
 export class AppModule {

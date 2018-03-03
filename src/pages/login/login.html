@@ -14,22 +14,19 @@
 
 <ion-content padding>
 
-  <span *ngIf="!userProfile" >
+  <span *ngIf="!userProfile">
 
     <h4 style="text-align: center ; padding-top: 30%">Utilisateur non connecté</h4>
-    <button ion-button block color="danger" (click)="logIn()"  icon-start >
+    <button ion-button block color="danger" (click)="logIn()" icon-start>
       <ion-icon name="logo-googleplus"></ion-icon>
       <p>Se connecter avec Google</p>
     </button>
-
   </span>
 
-
-
-  <ion-card *ngIf="userProfile" >
+  <ion-card *ngIf="userProfile">
 
     <ion-item>
-      <img [src]="userProfile.photoURL" class="circle-pic" >
+      <img [src]="userProfile.photoURL" class="circle-pic">
     </ion-item>
 
     <ion-card-content>
@@ -51,20 +48,21 @@
 
     <ion-item>
       <button ion-button color="danger" (click)="logOut()">
-        Deconnexion</button>
+        Deconnexion
+      </button>
     </ion-item>
 
   </ion-card>
 
 
   <!--<ion-item *ngIf="userProfile">-->
-    <!--<h3>Utilisateur connecté</h3>-->
+  <!--<h3>Utilisateur connecté</h3>-->
 
-    <!--<ion-avatar item-left>-->
-      <!--<img [src]="userProfile.photoURL">-->
-    <!--</ion-avatar>-->
-    <!--<h2>{{ userProfile.displayName }}</h2>-->
-    <!--<h3>{{ userProfile.email }}</h3>-->
+  <!--<ion-avatar item-left>-->
+  <!--<img [src]="userProfile.photoURL">-->
+  <!--</ion-avatar>-->
+  <!--<h2>{{ userProfile.displayName }}</h2>-->
+  <!--<h3>{{ userProfile.email }}</h3>-->
   <!--</ion-item>-->
 
 

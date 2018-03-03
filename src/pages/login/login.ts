@@ -38,8 +38,7 @@ export class LoginPage {
   private injectAuthProvider() {
     if (this.appIsRunningOnWebBrowser()) {
       this.authProvider = this.injector.get(GoogleWebAuthProvider);
-    }
-    else {
+    } else {
       this.authProvider = this.injector.get(GooglePlusAuthProvider);
     }
   }
@@ -52,6 +51,7 @@ export class LoginPage {
     if (null != this.authProvider) {
       this.authProvider.logOut();
     }
+    this.authProvider.getFirebaseAuth().signOut();
   }
 
   logIn()

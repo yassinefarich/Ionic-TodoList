@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
-import {TodoList} from '../model/TodoList';
-import {TodoItem} from '../model/TodoItem';
+import {TodoList} from '../model/todo-list';
+import {TodoItem} from '../model/todo-item';
 import {AngularFireDatabase} from 'angularfire2/database';
 
 
@@ -15,6 +15,8 @@ class Guid {// credit https://gist.github.com/benjamincharity/82ce8651dd53dbee38
   }
 }
 
+
+// TODO: This service
 
 @Injectable()
 export class TodoServiceProvider {

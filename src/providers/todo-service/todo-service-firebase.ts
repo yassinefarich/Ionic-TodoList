@@ -1,74 +1,104 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
-import {TodoList} from '../../model/TodoList';
-import {TodoItem} from '../../model/TodoItem';
+import {TodoList, TodoListFactory} from '../../model/todo-list';
+import {TodoItem} from '../../model/todo-item';
+import {GooglePlusAuthProvider} from '../google-auth/google-plus-auth';
+
+
+const DEFAULT_ROOT_NODE = '/default'
+
+/**
+ * UUid Generator Credit to :
+ *      https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+ */
+function generateUUID() { // Public Domain/MIT
+  var d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now(); // use high-precision timer if available
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
 
 
 @Injectable()
 export class TodoServiceProviderFireBase {
 
-  data: AngularFireList<TodoList>;
+  private data: AngularFireList<TodoList>;
+  private rootNode: string = null;
 
-  constructor(private todosDatabase: AngularFireDatabase) {
-    console.log('Hello TodoServiceProvider Provider');
+
+// TODO : GooglePlusAuthProvider
+  constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: GooglePlusAuthProvider) {
+  }
+
+  private getRootNode() {
+
+    if (null === this.rootNode) {
+      const fireBaseAuth = this.authProvider.getFirebaseAuth().currentUser;
+
+      this.rootNode = null === fireBaseAuth ? DEFAULT_ROOT_NODE :
+        fireBaseAuth.email
+          .replace('@', '_')
+          .replace('.', '_');
+
+    }
+    return this.rootNode;
   }
 
   public getList(): Observable<any> {
-    this.data = this.todosDatabase.list('/');
+    this.data = this.angularFireDatabase.list(`${this.getRootNode()}/`);
+
     return this.data.valueChanges();
   }
 
-  public getListByUuid(uuid : string): AngularFireList<TodoList> {
-    return this.todosDatabase.list(`/${uuid}/items`);
-  }
-
   public createNewTodoList(todoListName: string) {
-    let newTodoList: TodoList = this.makeNewTodoList(todoListName);
-    const newTodoListKey = this.data.push(newTodoList).key;
-    newTodoList.uuid = newTodoListKey;
-    this.data.update(newTodoListKey, newTodoList)
-
+    const newTodoList: TodoList = TodoListFactory
+      .createNewWithNameAndUUid(todoListName, generateUUID());
+    return this.data.set(newTodoList.uuid, newTodoList);
   }
 
-  private makeNewTodoList(todoListName: string): TodoList {
-    return {
-      uuid: '0',
-      name: todoListName,
-      items: new Array<TodoItem>()
-    };
+  public updateTodoList(todoList: TodoList): Promise<void> {
+    return this.data.update(todoList.uuid, todoList);
   }
 
-
-  public getTodos(uuid: string): AngularFireList<TodoItem> {
-    return this.todosDatabase.list<TodoItem>(`/${uuid}/items`);
+  public deleteTodoList(todoList: TodoList) {
+    return this.data.remove(todoList.uuid);
   }
 
-  public getTodosAsObservable(uuid: string): Observable<TodoItem[]> {
-    return this.todosDatabase.list<TodoItem>(`/${uuid}/items`)
+  public getTodoItems(uuid: string): AngularFireList<TodoItem> {
+    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`);
+  }
+
+  public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
+    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`)
       .valueChanges();
   }
 
   public createNewTodo(listUuid: string, newItem: TodoItem) {
-    const itemList = this.getTodos(listUuid);
-    const newTodoItemKey = itemList.push(newItem).key;
-    newItem.uuid = newTodoItemKey;
-    itemList.update(newTodoItemKey, newItem);
+    const itemList = this.getTodoItems(listUuid);
+    newItem.uuid = generateUUID();
+    return itemList.set(newItem.uuid, newItem);
   }
 
   public updateTodo(listUuid: string, editedItem: TodoItem) {
-    let items = this.getTodos(listUuid).update(editedItem.uuid, editedItem);
+    return this.getTodoItems(listUuid).update(editedItem.uuid, editedItem);
   }
 
   public deleteTodo(listUuid: string, uuid: string) {
-    const itemList = this.getTodos(listUuid).remove(uuid);
-
+    return this.getTodoItems(listUuid).remove(uuid);
   }
 
-  public deleteTodoList(todoList: TodoList) {
-    this.data.remove(todoList.uuid);
-  }
+  // //Todo: This Function is not used !
+  // public getListByUuid(uuid: string): AngularFireList<TodoList> {
+  //   return this.angularFireDatabase.list(`${ROOT_NODE}/${uuid}/items`);
+  // }
+
 }
 
 

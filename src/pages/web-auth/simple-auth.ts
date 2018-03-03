@@ -7,9 +7,9 @@ import firebase from 'firebase';
 @IonicPage()
 @Component({
   selector: 'page-web-auth',
-  templateUrl: 'web-auth.html',
+  templateUrl: 'simple-auth.html',
 })
-//TODO : !!!! This component is never user please delete It
+// TODO : !!!! This component is never user please delete It
 export class WebAuthPage {
 
   userProfile: any = null;
@@ -17,9 +17,9 @@ export class WebAuthPage {
   constructor(public navCtrl: NavController, public navParams: NavParams , public afAuth: AngularFireAuth) {
 
     firebase.auth().onAuthStateChanged( user => {
-      if (user){
+      if (user) {
         this.userProfile = user;
-        console.log(`User Authentified ${this.userProfile.displayName}`)
+        console.log(`User Authentified ${this.userProfile.displayName}`);
       } else {
         this.userProfile = null;
       }
