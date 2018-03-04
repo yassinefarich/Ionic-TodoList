@@ -22,11 +22,16 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 })
 export class TodoListsPage implements OnInit {
 
-  private todoLists: TodoList[];
+  private personalTodoLists: TodoList[];
+  private sharedTodoLists: string[];
 
   ngOnInit(): void {
     this.todoListService.getList().subscribe(x => {
-      this.todoLists = x;
+      this.personalTodoLists = x;
+    });
+
+    this.todoListService.getSharedList().subscribe(x => {
+      this.sharedTodoLists = x;
     });
   }
 
@@ -99,6 +104,11 @@ export class TodoListsPage implements OnInit {
       .present();
   }
 
+  shareTodoList(todoList)
+  {
+    alert("Share TodoList")
+    this.todoListService.shareListWith(todoList);
+  }
 
   numberOfUncompletedTodos(todoList: TodoList): number {
     // TODO : This is a baaaad function :( , re-check it please

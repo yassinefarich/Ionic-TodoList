@@ -9,6 +9,13 @@ import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
 
 const DEFAULT_ROOT_NODE = '/default'
+const USERS_NODE = '/users'
+
+// Lists owned by the current user.
+const PERSONAL_LISTS_NODE = '/personal_lists';
+
+// Shared lists with the current user.
+const SHARED_LISTS_NODE = '/shared_lists';
 
 /**
  * UUid Generator Credit to :
@@ -30,16 +37,13 @@ function generateUUID() { // Public Domain/MIT
 @Injectable()
 export class TodoServiceProviderFireBase {
 
-  private data: AngularFireList<TodoList>;
+  private personalTodoLists: AngularFireList<TodoList>;
   private rootNode: string = null;
 
-
-// TODO : GooglePlusAuthProvider
   constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: ToDoAppGoogleAuthProvider) {
   }
 
-  private getRootNode() {
-
+  private getUserName() {
     if (null === this.rootNode) {
       const fireBaseAuth = this.authProvider.getFirebaseAuth().currentUser;
 
@@ -52,33 +56,52 @@ export class TodoServiceProviderFireBase {
     return this.rootNode;
   }
 
-  public getList(): Observable<any> {
-    this.data = this.angularFireDatabase.list(`${this.getRootNode()}/`);
+  private getTodoUserInfo()
+  {
 
-    return this.data.valueChanges();
   }
 
+  public getList(): Observable<any> {
+    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}`;
+    this.personalTodoLists = this.angularFireDatabase.list(request);
+
+    return this.personalTodoLists.valueChanges();
+  }
+
+  public getSharedList(): Observable<any> {
+    const request = `${this.getUserName()}/${SHARED_LISTS_NODE}`;
+    this.personalTodoLists = this.angularFireDatabase.list(request);
+    return this.personalTodoLists.valueChanges();
+  }
+
+  public shareListWith(todoList: TodoList, user: string = 'default') {
+    this.angularFireDatabase.list('/' + user + '/' + SHARED_LISTS_NODE + '/')
+      .set(todoList.uuid, this.getUserName() + '/' + todoList.uuid);
+
+    if (undefined === todoList.shared_with) {
+      todoList.shared_with = new Set();
+    }
+
+    todoList.shared_with.add(user);
+    this.updateTodoList(todoList);
+  }
+
+  public getUsersList() : Observable<any> {
+    const request = `/`;
+    return this.angularFireDatabase.list<TodoItem>(request).valueChanges();
+  }
   public createNewTodoList(todoListName: string) {
     const newTodoList: TodoList = TodoListFactory
       .createNewWithNameAndUUid(todoListName, generateUUID());
-    return this.data.set(newTodoList.uuid, newTodoList);
+    return this.personalTodoLists.set(newTodoList.uuid, newTodoList);
   }
 
   public updateTodoList(todoList: TodoList): Promise<void> {
-    return this.data.update(todoList.uuid, todoList);
+    return this.personalTodoLists.update(todoList.uuid, todoList);
   }
 
   public deleteTodoList(todoList: TodoList) {
-    return this.data.remove(todoList.uuid);
-  }
-
-  public getTodoItems(uuid: string): AngularFireList<TodoItem> {
-    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`);
-  }
-
-  public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
-    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`)
-      .valueChanges();
+    return this.personalTodoLists.remove(todoList.uuid);
   }
 
   public createNewTodo(listUuid: string, newItem: TodoItem) {
@@ -93,6 +116,15 @@ export class TodoServiceProviderFireBase {
 
   public deleteTodo(listUuid: string, uuid: string) {
     return this.getTodoItems(listUuid).remove(uuid);
+  }
+
+  public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
+    return this.getTodoItems(uuid).valueChanges();
+  }
+
+  public getTodoItems(uuid: string): AngularFireList<TodoItem> {
+    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}/${uuid}/items`;
+    return this.angularFireDatabase.list<TodoItem>(request);
   }
 
   // //Todo: This Function is not used !
