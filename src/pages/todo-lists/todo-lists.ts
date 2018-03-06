@@ -23,7 +23,7 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 export class TodoListsPage implements OnInit {
 
   private personalTodoLists: TodoList[];
-  private sharedTodoLists: string[];
+  private sharedTodoLists: TodoList[] = new Array();
 
   ngOnInit(): void {
     this.todoListService.getList().subscribe(x => {
@@ -31,7 +31,12 @@ export class TodoListsPage implements OnInit {
     });
 
     this.todoListService.getSharedList().subscribe(x => {
-      this.sharedTodoLists = x;
+      console.log(x)
+      x.subscribe(y=>this.sharedTodoLists.push(y))
+      //x.subscribe(
+      //  y => this.sharedTodoLists = y
+      //)//Correct this line pllzz
+      //this.sharedTodoLists.push(x);
     });
   }
 

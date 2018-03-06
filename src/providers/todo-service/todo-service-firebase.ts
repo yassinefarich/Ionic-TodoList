@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
+import * as Rx from 'rxjs';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
@@ -38,6 +39,9 @@ function generateUUID() { // Public Domain/MIT
 export class TodoServiceProviderFireBase {
 
   private personalTodoLists: AngularFireList<TodoList>;
+  private sharedTodoLists: AngularFireList<string>
+
+
   private rootNode: string = null;
 
   constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: ToDoAppGoogleAuthProvider) {
@@ -68,21 +72,50 @@ export class TodoServiceProviderFireBase {
     return this.personalTodoLists.valueChanges();
   }
 
+  //TODO : Review this fu*ing fuunction !!!
   public getSharedList(): Observable<any> {
     const request = `${this.getUserName()}/${SHARED_LISTS_NODE}`;
-    this.personalTodoLists = this.angularFireDatabase.list(request);
-    return this.personalTodoLists.valueChanges();
+    this.sharedTodoLists = this.angularFireDatabase.list(request);
+
+    // return this.sharedTodoLists
+    //   .valueChanges()
+    //   .map(
+    //     shared_lsts_url => shared_lsts_url
+    //       .map(x => this.angularFireDatabase.object(x).valueChanges())
+    //       .reduce((x,y) => Observable.combineLatest(x,y)
+    //   )
+    // ).switch()
+
+
+    return this.sharedTodoLists
+      .valueChanges()
+      .flatMap(
+        shared_lsts_url => shared_lsts_url
+          .map(x => this.angularFireDatabase.object(x).valueChanges())
+  //    )
+  )
+
   }
 
-  public shareListWith(todoList: TodoList, user: string = 'default') {
-    this.angularFireDatabase.list('/' + user + '/' + SHARED_LISTS_NODE + '/')
-      .set(todoList.uuid, this.getUserName() + '/' + todoList.uuid);
+  // private getListByURL(url:string)
+  // {
+  //   this.angularFireDatabase.object(url);
+  //   this.sharedTodoLists
+  //     .valueChanges().map(x => );
+  //
+  // }
 
+  public shareListWith(todoList: TodoList, user: string = 'default') {
+    this.angularFireDatabase.list('/' + 'default' + '/' + SHARED_LISTS_NODE + '/')
+      .set(todoList.uuid, this.getUserName() +PERSONAL_LISTS_NODE+'/'+ todoList.uuid);
+
+    console.debug("81")
     if (undefined === todoList.shared_with) {
-      todoList.shared_with = new Set();
+      todoList.shared_with = new Array<string>();
     }
 
-    todoList.shared_with.add(user);
+    todoList.shared_with.push(user);
+    console.log(todoList)
     this.updateTodoList(todoList);
   }
 
