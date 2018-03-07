@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {TodoItem} from '../../model/todo-item';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
+import {SharePage} from '../share/share';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -23,7 +24,7 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 export class TodoListsPage implements OnInit {
 
   private personalTodoLists: TodoList[];
-  private sharedTodoLists: TodoList[] = new Array();
+  private sharedTodoLists: [string, TodoList][] = new Array();
 
   ngOnInit(): void {
     this.todoListService.getList().subscribe(x => {
@@ -32,7 +33,16 @@ export class TodoListsPage implements OnInit {
 
     this.todoListService.getSharedList().subscribe(x => {
       console.log(x)
-      x.subscribe(y=>this.sharedTodoLists.push(y))
+      //this.sharedTodoLists.splice(0,this.sharedTodoLists.length);
+
+      while(this.sharedTodoLists.length > 0) {
+        this.sharedTodoLists.pop();
+      }
+
+      if (null !== x && null !== x[1])
+        x[1].subscribe(y => {
+          if (null !== y)  this.sharedTodoLists.push([x,y]);
+        })
       //x.subscribe(
       //  y => this.sharedTodoLists = y
       //)//Correct this line pllzz
@@ -41,9 +51,10 @@ export class TodoListsPage implements OnInit {
   }
 
   constructor(public navCtrl: NavController,
+              public modalCtrl: ModalController,
               public navParams: NavParams,
               private todoListService: TodoServiceProviderFireBase,
-              private sharedAlertProvider: SharedAlertProvider) {
+              private sharedAlertProvider: SharedAlertProvider, public alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -53,6 +64,15 @@ export class TodoListsPage implements OnInit {
   itemSelected(todoList: TodoList) {
     this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid, 'listName': todoList.name});
   }
+
+  itemSelectedSharedList(todoList: [string, TodoList]) {
+    this.navCtrl.push(ItemListPage, {
+      'idListe': todoList[1].uuid,
+      'listName': todoList[1].name,
+      'listURL': todoList[0][0]
+    });
+  }
+
 
   addOrEditTodoList(todoList?, item?) {
 
@@ -109,10 +129,35 @@ export class TodoListsPage implements OnInit {
       .present();
   }
 
-  shareTodoList(todoList)
-  {
-    alert("Share TodoList")
-    this.todoListService.shareListWith(todoList);
+  shareTodoList(todoList) {
+    // let prompt = this.sharedAlertProvider
+    //   .buildPromptAlert()
+    //   .withTitle('Partager la liste avec ')
+    //   .withMessage('Veuillez entrer l\'email')
+    //   .withInputs([{
+    //     name: 'email',
+    //     type:'text',
+    //     placeholder: 'email',
+    //     value: '',
+    //   },{
+    //       type: 'checkbox',
+    //       label: 'Cree une copie',
+    //       value: 'createCopy',
+    //       checked: false
+    //     }
+    //   ])
+    //   .withOnOkHandler(data => {
+    //     this.todoListService.shareListWith(todoList, data.email);
+    //   })
+    //   .withOnCancelHandler(data => {
+    //
+    //   })
+    //   .build()
+    //   .present();
+
+    let modal = this.modalCtrl.create(SharePage, {'todoList': todoList});
+    modal.present();
+
   }
 
   numberOfUncompletedTodos(todoList: TodoList): number {
@@ -125,5 +170,7 @@ export class TodoListsPage implements OnInit {
     }
     return 0;
   }
+
+
 
 }

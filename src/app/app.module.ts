@@ -29,6 +29,8 @@ import {
   ConfirmationAlertBuilder, PromptAlertBuilder,
   SharedAlertProvider
 } from '../providers/shared-alert-service/shared-alert';
+import {SharePage} from '../pages/share/share';
+import {SharePageModule} from '../pages/share/share.module';
 
 
 // AF2 Settings
@@ -56,6 +58,7 @@ export const firebaseConfig = {
     TodoListsPageModule,
     LoginPageModule,
     WebAuthPageModule,
+    SharePageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,

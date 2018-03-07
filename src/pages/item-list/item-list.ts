@@ -22,6 +22,7 @@ export class ItemListPage implements OnInit {
 
   private todoListUUid = '';
   private todoListName = 'TodoListName';
+  private sharedTodoListURL = '';
 
   private todos: TodoItem[];
 
@@ -29,12 +30,25 @@ export class ItemListPage implements OnInit {
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
     this.todoListName = this.params.get('listName');
-    // this.todoListService.getTodoListByUUID(this.todoListUUid);
 
-    this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
-      this.todos = x;
-    });
+    this.sharedTodoListURL = null != this.params.get('listURL') ?
+      this.params.get('listURL') : '';
 
+    if (this.isSharedList()) {
+      this.todoListService.getTodoItemsByListURLAsObservable(this.sharedTodoListURL).subscribe(x => {
+        this.todos = x;
+      });
+    }
+    else {
+      this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
+        this.todos = x;
+      });
+    }
+
+  }
+
+  private isSharedList() {
+    return '' !== this.sharedTodoListURL;
   }
 
   constructor(public navCtrl: NavController,
@@ -111,7 +125,17 @@ export class ItemListPage implements OnInit {
   }
 
   markItemAsCompleted(todoItem: TodoItem) {
-    this.todoListService.updateTodo(this.todoListUUid, todoItem);
+
+
+    if (this.isSharedList()) {
+      this.todoListService.updateTodoByListURL(this.sharedTodoListURL, todoItem);
+    }
+    else {
+      this.todoListService.updateTodo(this.todoListUUid, todoItem);
+    }
+
+
+
   }
 
 }

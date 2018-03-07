@@ -10,7 +10,7 @@ import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
 
 const DEFAULT_ROOT_NODE = '/default'
-const USERS_NODE = '/users'
+// const USERS_NODE = '/users'
 
 // Lists owned by the current user.
 const PERSONAL_LISTS_NODE = '/personal_lists';
@@ -91,7 +91,7 @@ export class TodoServiceProviderFireBase {
       .valueChanges()
       .flatMap(
         shared_lsts_url => shared_lsts_url
-          .map(x => this.angularFireDatabase.object(x).valueChanges())
+          .map(x => [x,this.angularFireDatabase.object(x).valueChanges()])
   //    )
   )
 
@@ -106,10 +106,13 @@ export class TodoServiceProviderFireBase {
   // }
 
   public shareListWith(todoList: TodoList, user: string = 'default') {
-    this.angularFireDatabase.list('/' + 'default' + '/' + SHARED_LISTS_NODE + '/')
+
+
+    let userId = this.formatEmail(user);
+
+    this.angularFireDatabase.list('/' + userId + '/' + SHARED_LISTS_NODE + '/')
       .set(todoList.uuid, this.getUserName() +PERSONAL_LISTS_NODE+'/'+ todoList.uuid);
 
-    console.debug("81")
     if (undefined === todoList.shared_with) {
       todoList.shared_with = new Array<string>();
     }
@@ -117,6 +120,18 @@ export class TodoServiceProviderFireBase {
     todoList.shared_with.push(user);
     console.log(todoList)
     this.updateTodoList(todoList);
+  }
+
+  shareListWithCreateCopy(todoList: any, email: string) {
+    let userId = this.formatEmail(email);
+    this.angularFireDatabase.list('/' + userId + '/' + PERSONAL_LISTS_NODE + '/')
+      .set(todoList.uuid, todoList);
+  }
+
+  private formatEmail(user: string) {
+    return user
+      .replace('@', '_')
+      .replace('.', '_');
   }
 
   public getUsersList() : Observable<any> {
@@ -147,6 +162,11 @@ export class TodoServiceProviderFireBase {
     return this.getTodoItems(listUuid).update(editedItem.uuid, editedItem);
   }
 
+  public updateTodoByListURL(sharedTodoListURL: string, todoItem: TodoItem) {
+    const request = `${sharedTodoListURL}/items`;
+    return this.angularFireDatabase.list<TodoItem>(request).update(todoItem.uuid,todoItem);
+  }
+
   public deleteTodo(listUuid: string, uuid: string) {
     return this.getTodoItems(listUuid).remove(uuid);
   }
@@ -160,10 +180,12 @@ export class TodoServiceProviderFireBase {
     return this.angularFireDatabase.list<TodoItem>(request);
   }
 
-  // //Todo: This Function is not used !
-  // public getListByUuid(uuid: string): AngularFireList<TodoList> {
-  //   return this.angularFireDatabase.list(`${ROOT_NODE}/${uuid}/items`);
-  // }
+  public getTodoItemsByListURLAsObservable(sharedTodoListURL: string) {
+    const request = `${sharedTodoListURL}/items`;
+    return this.angularFireDatabase.list<TodoItem>(request).valueChanges();
+  }
+
+
 
 }
 
