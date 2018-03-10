@@ -5,6 +5,7 @@ import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
+import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 
 /**
  * Generated class for the ItemListPage page.
@@ -35,7 +36,7 @@ export class ItemListPage implements OnInit {
       this.params.get('listURL') : '';
 
     if (this.isSharedList()) {
-      this.todoListService.getTodoItemsByListURLAsObservable(this.sharedTodoListURL).subscribe(x => {
+      this.listSharingProvider.getTodoItemsByListURLAsObservable(this.sharedTodoListURL).subscribe(x => {
         this.todos = x;
       });
     }
@@ -54,7 +55,7 @@ export class ItemListPage implements OnInit {
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public params: NavParams,
-              public navParams: NavParams,
+              public listSharingProvider: ListSharingProvider,
               public todoListService: TodoServiceProviderFireBase,
               public sharedAlertProvider: SharedAlertProvider) {
   }
@@ -128,7 +129,7 @@ export class ItemListPage implements OnInit {
 
 
     if (this.isSharedList()) {
-      this.todoListService.updateTodoByListURL(this.sharedTodoListURL, todoItem);
+      this.listSharingProvider.updateTodoByListURL(this.sharedTodoListURL, todoItem);
     }
     else {
       this.todoListService.updateTodo(this.todoListUUid, todoItem);

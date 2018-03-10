@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
+import {Component} from '@angular/core';
+import {IonicPage, NavParams, ViewController} from 'ionic-angular';
+import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 
 /**
  * Generated class for the SharePage page.
@@ -18,32 +18,26 @@ export class SharePage {
 
 
   private todoList;
-  private email : string = '';
-  private createCopy : boolean = false;
+  private email: string = '';
+  private createCopy: boolean = false;
 
-  constructor(public viewCtrl: ViewController, public navParams: NavParams,private todoListService: TodoServiceProviderFireBase,) {
+  constructor(public viewCtrl: ViewController,
+              public navParams: NavParams,
+              private listSharingProvider: ListSharingProvider) {
     this.todoList = navParams.get('todoList');
   }
 
 
-  shareTodoList()
-  {
+  shareTodoList() {
 
-    if(this.createCopy)
-    {
-      this.todoListService.shareListWithCreateCopy(this.todoList, this.email);
+    if (this.createCopy) {
+      this.listSharingProvider.shareListWithCreateCopy(this.todoList, this.email);
     }
     else {
-      this.todoListService.shareListWith(this.todoList, this.email);
+      this.listSharingProvider.shareList(this.todoList, this.email);
     }
     this.dismiss();
   }
-
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SharePage'+this.todoList.uuid);
-  }
-
 
   dismiss() {
     this.viewCtrl.dismiss();

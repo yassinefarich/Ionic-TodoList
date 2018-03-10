@@ -31,6 +31,7 @@ import {
 } from '../providers/shared-alert-service/shared-alert';
 import {SharePage} from '../pages/share/share';
 import {SharePageModule} from '../pages/share/share.module';
+import { ListSharingProvider } from '../providers/list-sharing/list-sharing';
 
 
 // AF2 Settings
@@ -87,6 +88,7 @@ export const firebaseConfig = {
     ToDoAppGoogleAuthProvider,
     ConfirmationAlertBuilder,
     PromptAlertBuilder,
+    ListSharingProvider,
   ]
 })
 export class AppModule {
