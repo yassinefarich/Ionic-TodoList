@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
-import {SharedTodoList, TodoList} from '../../model/todo-list';
+import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';

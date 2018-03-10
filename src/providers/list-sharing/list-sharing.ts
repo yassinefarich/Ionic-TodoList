@@ -10,14 +10,12 @@ import {TodoServiceProviderFireBase} from '../todo-service/todo-service-firebase
 @Injectable()
 export class ListSharingProvider {
 
-
   private sharedTodoLists: AngularFireList<string>;
   private subject = new Rx.Subject();
 
   constructor(private angularFireDatabase: AngularFireDatabase,
               private todoService: TodoServiceProviderFireBase) {
   }
-
 
   //TODO : If you have time Review This Function -_-
   public getSharedList(): Observable<any> {

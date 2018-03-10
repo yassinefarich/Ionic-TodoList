@@ -1,13 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
-import * as Rx from 'rxjs';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
-import {GooglePlusAuthProvider} from '../google-auth/google-plus-auth';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
-import {objectAssign} from '@ionic/app-scripts';
 import {DEFAULT_ROOT_NODE, generateUUID, PERSONAL_LISTS_NODE} from '../Utils';
 
 @Injectable()
