@@ -70,4 +70,7 @@ export class ListSharingProvider {
   }
 
 
+  getListPath(todoList: any, email: string) {
+    return this.todoService.getUserName() + PERSONAL_LISTS_NODE + '/' + todoList.uuid
+  }
 }
