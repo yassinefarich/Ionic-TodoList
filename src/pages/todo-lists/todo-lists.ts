@@ -40,8 +40,18 @@ export class TodoListsPage implements OnInit {
     });
     // TODO : If you have time , take a look on the instructions below
     this.listSharingProvider.getSharedList().subscribe(x => {
-      this.sharedTodoLists = this.sharedTodoLists.filter(d => d[0] !== x[0]);
-      this.sharedTodoLists.push(x);
+
+      let index = this.sharedTodoLists.findIndex(d => d[0] === x[0]);
+      console.log(index)
+      if(index >= 0)
+      {
+        this.sharedTodoLists[index] = x ;
+      }
+      else {
+        this.sharedTodoLists.push(x);
+      }
+      //this.sharedTodoLists = this.sharedTodoLists.filter(d => d[0] !== x[0]);
+
     });
   }
 
