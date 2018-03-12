@@ -6,84 +6,102 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>todoLists</ion-title>
+  <ion-navbar no-border-bottom>
+    <ion-title>Mes listes</ion-title>
   </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="listChoice">
+      <ion-segment-button value="personal">
+        Personels
+      </ion-segment-button>
+      <ion-segment-button value="shared">
+        Partagées
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
 </ion-header>
 
+  <ion-content>
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <div [ngSwitch]="listChoice">
+      <ion-list *ngSwitchCase="'personal'" >
 
-<ion-content>
+        <ion-item-sliding *ngFor="let todoList of personalTodoLists" #item>
 
-  <h2 style="text-align: center;">My Personal TodoLists</h2>
+          <ion-item (click)="itemSelected(todoList)" >
 
-  <ion-list>
+            <ion-icon name="list" item-start></ion-icon>
+            {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
+            <button ion-button outline item-end (click)="shareTodoList(todoList);$event.stopPropagation()">Partager</button>
 
-    <ion-item-sliding *ngFor="let todoList of personalTodoLists" #item>
+          </ion-item>
 
-      <ion-item (click)="itemSelected(todoList)">
-        <ion-icon name="list" item-start></ion-icon>
-        {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
-      </ion-item>
+          <ion-item-options side="right">
 
-      <ion-item-options side="right">
+            <button ion-button color="danger" (click)="deleteList(todoList)">
+              <ion-icon name="trash"></ion-icon>
+              Supprimer
+            </button>
 
-        <button ion-button color="danger" (click)="deleteList(todoList)">
-          <ion-icon name="trash"></ion-icon>
-          Supprimer
-        </button>
+            <button ion-button (click)="addOrEditTodoList(todoList , item)">
+              <ion-icon name="create"></ion-icon>
+              Modifier
+            </button>
 
-        <button ion-button (click)="addOrEditTodoList(todoList , item)">
-          <ion-icon name="create"></ion-icon>
-          Modifier
-        </button>
+          </ion-item-options>
 
-        <button ion-button (click)="shareTodoList(todoList)">
-          <ion-icon name="create"></ion-icon>
-          Partager
-        </button>
+          <ion-item-options side="left">
 
-      </ion-item-options>
+            <button ion-button color="secondary" (click)="shareTodoList(todoList)">
+              <ion-icon name="ios-share"></ion-icon>
+              Partager
+            </button>
 
-    </ion-item-sliding>
+          </ion-item-options>
 
-  </ion-list>
+        </ion-item-sliding>
 
+      </ion-list>
 
+      <ion-list  *ngSwitchCase="'shared'">
 
-  <h2 style="text-align: center;">Shared With Me</h2>
+        <ion-item-sliding *ngFor="let todoList of sharedTodoLists" #item>
 
-  <ion-list>
+          <ion-item (click)="itemSelectedSharedList(todoList)">
+            <ion-icon name="list" item-start></ion-icon>
+            {{ todoList[1].name}} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList[1])}}</ion-badge>
+          </ion-item>
 
-    <ion-item-sliding *ngFor="let todoList of sharedTodoLists" #item>
+          <ion-item-options side="right">
 
-      <ion-item (click)="itemSelectedSharedList(todoList)">
-        <ion-icon name="list" item-start></ion-icon>
-        {{ todoList[1].name}} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList[1])}}</ion-badge>
-      </ion-item>
+            <!--<button ion-button color="danger" (click)="deleteList(todoList)">-->
+            <!--<ion-icon name="trash"></ion-icon>-->
+            <!--Supprimer-->
+            <!--</button>-->
 
-      <ion-item-options side="right">
+            <!--<button ion-button (click)="addOrEditTodoList(todoList , item)">-->
+            <!--<ion-icon name="create"></ion-icon>-->
+            <!--Modifier-->
+            <!--</button>-->
 
-        <!--<button ion-button color="danger" (click)="deleteList(todoList)">-->
-          <!--<ion-icon name="trash"></ion-icon>-->
-          <!--Supprimer-->
-        <!--</button>-->
+          </ion-item-options>
 
-        <!--<button ion-button (click)="addOrEditTodoList(todoList , item)">-->
-          <!--<ion-icon name="create"></ion-icon>-->
-          <!--Modifier-->
-        <!--</button>-->
+        </ion-item-sliding>
 
-      </ion-item-options>
+      </ion-list>
 
-    </ion-item-sliding>
+    </div>
 
-  </ion-list>
+    <ion-fab right bottom style="padding-right: 2%;" >
+      <button ion-fab  color="primary" (click)="addOrEditTodoList()" ><ion-icon name="md-add"></ion-icon></button>
+    </ion-fab>
 
+    <ion-fab left bottom style="padding-right: 2%;" >
+      <button ion-fab  color="secondary" (click)="addOrEditTodoList()" ><ion-icon name="md-qr-scanner"></ion-icon></button>
+    </ion-fab>
 
-  <ion-fab right bottom style="padding-right: 2%;" >
-    <button ion-fab  color="primary" (click)="addOrEditTodoList()" ><ion-icon name="md-add"></ion-icon></button>
-  </ion-fab>
 
 
 </ion-content>

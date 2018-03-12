@@ -5,6 +5,7 @@ import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
+
 import {DEFAULT_ROOT_NODE, generateUUID, PERSONAL_LISTS_NODE} from '../Utils';
 
 @Injectable()

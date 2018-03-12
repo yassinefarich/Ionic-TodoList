@@ -25,6 +25,7 @@ import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 export class TodoListsPage implements OnInit {
 
   private personalTodoLists: TodoList[];
+  private listChoice = 'personal' ;
   private sharedTodoLists = new Array();
 
   constructor(private navCtrl: NavController,
