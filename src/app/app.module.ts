@@ -34,6 +34,7 @@ import {ListSharingProvider} from '../providers/list-sharing/list-sharing';
 import {NgxQRCodeModule} from 'ngx-qrcode2';
 import {QRScanner} from '@ionic-native/qr-scanner';
 import {FIREBASE_CONFIG} from '../fireBase-Settings';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import {FIREBASE_CONFIG} from '../fireBase-Settings';
     PromptAlertBuilder,
     ListSharingProvider,
     QRScanner,
+    BarcodeScanner
   ]
 })
 export class AppModule {

@@ -9,6 +9,7 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 import {SharePage} from '../share/share';
 import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -34,7 +35,9 @@ export class TodoListsPage implements OnInit {
               private listSharingProvider: ListSharingProvider,
               private todoListService: TodoServiceProviderFireBase,
               private sharedAlertProvider: SharedAlertProvider,
-              private qrScanner: QRScanner) {
+              private qrScanner: QRScanner,
+              private barcodeScanner: BarcodeScanner
+              ) {
   }
 
   ngOnInit(): void {
@@ -138,75 +141,18 @@ export class TodoListsPage implements OnInit {
     return 0;
   }
 
+
   showQRCodeScanner() {
-    this.scanCode();
-  }
-
-
-  scanCode() {
-    var context = this;
-    // Optionally request the permission early
-    this.qrScanner.prepare()
-      .then((status: QRScannerStatus) => {
-
-        if (status.authorized) {
-          // camera permission was granted
-          console.log("scanning");
-          var ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
-          alert("Hello");
-          // start scanning
-          let scanSub = this.qrScanner.scan().subscribe((scannedAddress: string) => {
-            console.log('Scanned address', scannedAddress);
-            this.qrScanner.hide(); // hide camera preview
-            scanSub.unsubscribe(); // stop scanning
-            ionApp.style.display = "block";
-          });
-
-          // show camera preview
-          ionApp.style.display = "none";
-          context.qrScanner.show();
-
-          // wait for user to scan something, then the observable callback will be called
-
-        } else if (status.denied) {
-          console.log("Denied permission to access camera");
-        } else {
-          console.log("Something else is happening with the camera");
-        }
-      })
-      .catch((e: any) => console.log('Error is', e));
-  }
-
-
-  scanCode2() {
-    this.qrScanner.prepare()
-      .then((status: QRScannerStatus) => {
-        if (status.authorized) {
-
-          let scanSub = this.qrScanner.scan().subscribe((text: string) => {
-            var ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
-            alert(text);
-            this.qrScanner.hide(); // hide camera preview
-            this.qrScanner.destroy();
-            scanSub.unsubscribe(); // stop scanning
-
-          });
-
-          // show camera preview
-          this.qrScanner.show();
-
-
-        } else if (status.denied) {
-          // camera permission was permanently denied
-          // you must use QRScanner.openSettings() method to guide the user to the settings page
-          // then they can grant the permission from there
-        } else {
-          // permission was denied, but not permanently. You can ask for permission again at a later time.
-        }
-      })
-      .catch((e: any) => console.log('Error is', e));
+    this.barcodeScanner.scan().then((barcodeData) => {
+      alert(barcodeData.text)
+    }, (err) => {
+      alert(err.toString())
+      // An error occurred
+    });
 
   }
+
+
 
 
 }
