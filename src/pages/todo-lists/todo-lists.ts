@@ -142,25 +142,59 @@ export class TodoListsPage implements OnInit {
     this.scanCode();
   }
 
+
   scanCode() {
+    var context = this;
+    // Optionally request the permission early
+    this.qrScanner.prepare()
+      .then((status: QRScannerStatus) => {
+
+        if (status.authorized) {
+          // camera permission was granted
+          console.log("scanning");
+          var ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
+          alert("Hello");
+          // start scanning
+          let scanSub = this.qrScanner.scan().subscribe((scannedAddress: string) => {
+            console.log('Scanned address', scannedAddress);
+            this.qrScanner.hide(); // hide camera preview
+            scanSub.unsubscribe(); // stop scanning
+            ionApp.style.display = "block";
+          });
+
+          // show camera preview
+          ionApp.style.display = "none";
+          context.qrScanner.show();
+
+          // wait for user to scan something, then the observable callback will be called
+
+        } else if (status.denied) {
+          console.log("Denied permission to access camera");
+        } else {
+          console.log("Something else is happening with the camera");
+        }
+      })
+      .catch((e: any) => console.log('Error is', e));
+  }
+
+
+  scanCode2() {
     this.qrScanner.prepare()
       .then((status: QRScannerStatus) => {
         if (status.authorized) {
-          // camera permission was granted
 
-
-          // start scanning
           let scanSub = this.qrScanner.scan().subscribe((text: string) => {
-            console.log('Scanned something', text);
-
+            var ionApp = <HTMLElement>document.getElementsByTagName("ion-app")[0];
+            alert(text);
             this.qrScanner.hide(); // hide camera preview
+            this.qrScanner.destroy();
             scanSub.unsubscribe(); // stop scanning
+
           });
 
           // show camera preview
           this.qrScanner.show();
 
-          // wait for user to scan something, then the observable callback will be called
 
         } else if (status.denied) {
           // camera permission was permanently denied
@@ -173,5 +207,6 @@ export class TodoListsPage implements OnInit {
       .catch((e: any) => console.log('Error is', e));
 
   }
+
 
 }
