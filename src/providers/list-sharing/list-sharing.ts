@@ -22,26 +22,12 @@ export class ListSharingProvider {
     const request = `${this.todoService.getUserName()}/${SHARED_LISTS_NODE}`;
     this.sharedTodoLists = this.angularFireDatabase.list(request);
 
-    /**
-     * Use CombineLatest
-     *
-     */
 
-    this.sharedTodoLists.valueChanges()
-      .subscribe(
-        urls => {
-          urls.forEach(url => {
-            this.angularFireDatabase.object(url).valueChanges().subscribe(
-              list => {
-                if (null !== list)
-                  this.subject.next([url, list])
-              }
-            )
-          })
-        }
-      )
-    return this.subject;
-
+    return this.sharedTodoLists.valueChanges()
+      .flatMap(urls => urls)
+      .map(url => this.angularFireDatabase.object(url).valueChanges().map(list => [url, list]))
+      .mergeAll()
+      .filter(x => null !== x[1]);
   }
 
 
