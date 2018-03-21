@@ -146,9 +146,21 @@
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-4.5.3.tgz#b68a71a61346e4f4f8c4752f42ad0c2fc83e332d"
 
+"@ionic-native/camera@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/camera/-/camera-4.6.0.tgz#2bc8305040dc7ecf3720f60793c1002f4198e862"
+
 "@ionic-native/core@4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-4.4.0.tgz#fb0f071543bd2725d858f5a0f5c20adbece20df4"
+
+"@ionic-native/file-path@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file-path/-/file-path-4.6.0.tgz#be83caf648f8f013b12fb4c879150cb7c39b7fea"
+
+"@ionic-native/file@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-4.6.0.tgz#b47c894611612dd92344421ff5d4689e537eb86e"
 
 "@ionic-native/google-plus@^4.5.3":
   version "4.5.3"
@@ -165,6 +177,10 @@
 "@ionic-native/status-bar@4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-4.4.0.tgz#35bcf2012ece652bd765a972008bec5a7f258a95"
+
+"@ionic-native/transfer@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/transfer/-/transfer-3.14.0.tgz#43fb7b91272f245133063b0a1a5947927b09b21a"
 
 "@ionic/app-scripts@3.1.6":
   version "3.1.6"
@@ -871,6 +887,10 @@ cordova-common@^2.2.0:
     underscore "^1.8.3"
     unorm "^1.3.3"
 
+cordova-plugin-camera@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-camera/-/cordova-plugin-camera-4.0.2.tgz#309410927ef40adc6bebd4b0e91df2c8c644f38a"
+
 cordova-plugin-compat@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-compat/-/cordova-plugin-compat-1.2.0.tgz#0bc65757276ebd920c012ce920e274177576373e"
@@ -878,6 +898,18 @@ cordova-plugin-compat@^1.2.0:
 cordova-plugin-device@^1.1.4:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-1.1.7.tgz#fc94111be6932628c66868938ddf3dc82c9fbfe6"
+
+cordova-plugin-file-transfer@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-file-transfer/-/cordova-plugin-file-transfer-1.7.1.tgz#a75d8be2ebc3bb9b23c5b1bbd199214ec267586b"
+
+cordova-plugin-file@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
+
+cordova-plugin-filepath@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-filepath/-/cordova-plugin-filepath-1.2.0.tgz#63cc36c7610404ab8451cd57f4dc92303a027a48"
 
 cordova-plugin-googleplus@^5.2.1:
   version "5.2.1"

@@ -35,6 +35,9 @@ import {NgxQRCodeModule} from 'ngx-qrcode2';
 import {QRScanner} from '@ionic-native/qr-scanner';
 import {FIREBASE_CONFIG} from '../fireBase-Settings';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
+import {ItemEditorPageModule} from '../pages/item-editor/item-editor.module';
+import {Camera} from '@ionic-native/camera';
+import { ImageProvider } from '../providers/image/image';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,8 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
     AngularFirestoreModule.enablePersistence(),
-    NgxQRCodeModule
+    NgxQRCodeModule,
+    ItemEditorPageModule
 
   ],
   bootstrap: [IonicApp],
@@ -82,7 +86,9 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
     PromptAlertBuilder,
     ListSharingProvider,
     QRScanner,
-    BarcodeScanner
+    BarcodeScanner,
+    Camera,
+    ImageProvider
   ]
 })
 export class AppModule {

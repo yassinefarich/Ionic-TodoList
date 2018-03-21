@@ -12,6 +12,6 @@ export const FIREBASE_CONFIG = {
 
 export const NATIVE_AUTH_OPTION = {
   'webClientId': '143451751699-i0l7oqlottrluaaol7cdqudbcb531m12.apps.googleusercontent.com',
-  'offline': true
+  'offline': false
 };
 // End of FireBase settings
