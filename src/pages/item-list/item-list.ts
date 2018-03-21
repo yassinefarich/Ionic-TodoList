@@ -5,6 +5,7 @@ import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
+import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 
 /**
  * Generated class for the ItemListPage page.
@@ -22,6 +23,7 @@ export class ItemListPage implements OnInit {
 
   private todoListUUid = '';
   private todoListName = 'TodoListName';
+  private sharedTodoListURL = '';
 
   private todos: TodoItem[];
 
@@ -29,18 +31,31 @@ export class ItemListPage implements OnInit {
   ngOnInit(): void {
     this.todoListUUid = this.params.get('idListe');
     this.todoListName = this.params.get('listName');
-    // this.todoListService.getTodoListByUUID(this.todoListUUid);
 
-    this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
-      this.todos = x;
-    });
+    this.sharedTodoListURL = null != this.params.get('listURL') ?
+      this.params.get('listURL') : '';
 
+    if (this.isSharedList()) {
+      this.listSharingProvider.getTodoItemsByListURLAsObservable(this.sharedTodoListURL).subscribe(x => {
+        this.todos = x;
+      });
+    }
+    else {
+      this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
+        this.todos = x;
+      });
+    }
+
+  }
+
+  private isSharedList() {
+    return '' !== this.sharedTodoListURL;
   }
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public params: NavParams,
-              public navParams: NavParams,
+              public listSharingProvider: ListSharingProvider,
               public todoListService: TodoServiceProviderFireBase,
               public sharedAlertProvider: SharedAlertProvider) {
   }
@@ -111,7 +126,17 @@ export class ItemListPage implements OnInit {
   }
 
   markItemAsCompleted(todoItem: TodoItem) {
-    this.todoListService.updateTodo(this.todoListUUid, todoItem);
+
+
+    if (this.isSharedList()) {
+      this.listSharingProvider.updateTodoByListURL(this.sharedTodoListURL, todoItem);
+    }
+    else {
+      this.todoListService.updateTodo(this.todoListUUid, todoItem);
+    }
+
+
+
   }
 
 }

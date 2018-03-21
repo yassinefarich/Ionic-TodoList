@@ -16,31 +16,25 @@ import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {LoginPageModule} from '../pages/login/login.module';
-import { GooglePlus } from '@ionic-native/google-plus';
+import {GooglePlus} from '@ionic-native/google-plus';
 import {TodoServiceProviderFireBase} from '../providers/todo-service/todo-service-firebase';
-import {AngularFirestore, AngularFirestoreModule} from 'angularfire2/firestore';
-import {WebAuthPage} from '../pages/web-auth/simple-auth';
+import {AngularFirestoreModule} from 'angularfire2/firestore';
 import {WebAuthPageModule} from '../pages/web-auth/simple-auth.module';
 import {AngularFireAuth} from 'angularfire2/auth';
-import { ToDoAppGoogleAuthProvider } from '../providers/google-auth/google-auth';
+import {ToDoAppGoogleAuthProvider} from '../providers/google-auth/google-auth';
 import {GooglePlusAuthProvider} from '../providers/google-auth/google-plus-auth';
 import {GoogleWebAuthProvider} from '../providers/google-auth/google-web-auth';
 import {
-  ConfirmationAlertBuilder, PromptAlertBuilder,
+  ConfirmationAlertBuilder,
+  PromptAlertBuilder,
   SharedAlertProvider
 } from '../providers/shared-alert-service/shared-alert';
-
-
-// AF2 Settings
-export const firebaseConfig = {
-  apiKey: "AIzaSyDCVtCiTEb2wB-hkzbe9ofisTypLIbz7m0",
-  authDomain: "todolist-6374b.firebaseapp.com",
-  databaseURL: "https://todolist-6374b.firebaseio.com",
-  projectId: "todolist-6374b",
-  storageBucket: "todolist-6374b.appspot.com",
-  messagingSenderId: "143451751699"
-};
-
+import {SharePageModule} from '../pages/share/share.module';
+import {ListSharingProvider} from '../providers/list-sharing/list-sharing';
+import {NgxQRCodeModule} from 'ngx-qrcode2';
+import {QRScanner} from '@ionic-native/qr-scanner';
+import {FIREBASE_CONFIG} from '../fireBase-Settings';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 
 @NgModule({
   declarations: [
@@ -56,10 +50,12 @@ export const firebaseConfig = {
     TodoListsPageModule,
     LoginPageModule,
     WebAuthPageModule,
+    SharePageModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
-    AngularFirestoreModule.enablePersistence()
+    AngularFirestoreModule.enablePersistence(),
+    NgxQRCodeModule
 
   ],
   bootstrap: [IonicApp],
@@ -84,6 +80,9 @@ export const firebaseConfig = {
     ToDoAppGoogleAuthProvider,
     ConfirmationAlertBuilder,
     PromptAlertBuilder,
+    ListSharingProvider,
+    QRScanner,
+    BarcodeScanner
   ]
 })
 export class AppModule {

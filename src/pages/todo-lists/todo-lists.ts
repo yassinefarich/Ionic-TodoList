@@ -1,11 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {TodoItem} from '../../model/todo-item';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
+import {SharePage} from '../share/share';
+import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
+import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
+import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -22,26 +26,50 @@ import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-a
 })
 export class TodoListsPage implements OnInit {
 
-  private todoLists: TodoList[];
+  private personalTodoLists: TodoList[];
+  private listChoice = 'personal';
+  private sharedTodoLists = new Array();
+
+  constructor(private navCtrl: NavController,
+              private modalCtrl: ModalController,
+              private listSharingProvider: ListSharingProvider,
+              private todoListService: TodoServiceProviderFireBase,
+              private sharedAlertProvider: SharedAlertProvider,
+              private qrScanner: QRScanner,
+              private barcodeScanner: BarcodeScanner
+              ) {
+  }
 
   ngOnInit(): void {
     this.todoListService.getList().subscribe(x => {
-      this.todoLists = x;
+      this.personalTodoLists = x;
     });
-  }
+    // TODO : If you have time , take a look on the instructions below
+    this.listSharingProvider.getSharedList().subscribe(x => {
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
-              private todoListService: TodoServiceProviderFireBase,
-              private sharedAlertProvider: SharedAlertProvider) {
-  }
+      let index = this.sharedTodoLists.findIndex(d => d[0] === x[0]);
+      console.log(index)
+      if (index >= 0) {
+        this.sharedTodoLists[index] = x;
+      }
+      else {
+        this.sharedTodoLists.push(x);
+      }
+      //this.sharedTodoLists = this.sharedTodoLists.filter(d => d[0] !== x[0]);
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TodoListsPage');
+    });
   }
 
   itemSelected(todoList: TodoList) {
     this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid, 'listName': todoList.name});
+  }
+
+  itemSelectedSharedList(todoList: [string, TodoList]) {
+    this.navCtrl.push(ItemListPage, {
+      'idListe': todoList[1].uuid,
+      'listName': todoList[1].name,
+      'listURL': todoList[0]
+    });
   }
 
   addOrEditTodoList(todoList?, item?) {
@@ -89,7 +117,6 @@ export class TodoListsPage implements OnInit {
 
 
   deleteList(todoList) {
-
     this.sharedAlertProvider
       .buildConfirmationAlert()
       .withTitle('Confirmation de suppression')
@@ -99,10 +126,13 @@ export class TodoListsPage implements OnInit {
       .present();
   }
 
+  shareTodoList(todoList) {
+    let modal = this.modalCtrl.create(SharePage, {'todoList': todoList});
+    modal.present();
+
+  }
 
   numberOfUncompletedTodos(todoList: TodoList): number {
-    // TODO : This is a baaaad function :( , re-check it please
-
     if (undefined !== todoList.items) {
       const itemsAsArray: TodoItem[] = Object.keys(todoList.items)
         .map(key => todoList.items[key]);
@@ -110,5 +140,19 @@ export class TodoListsPage implements OnInit {
     }
     return 0;
   }
+
+
+  showQRCodeScanner() {
+    this.barcodeScanner.scan().then((barcodeData) => {
+      alert(barcodeData.text)
+    }, (err) => {
+      alert(err.toString())
+      // An error occurred
+    });
+
+  }
+
+
+
 
 }

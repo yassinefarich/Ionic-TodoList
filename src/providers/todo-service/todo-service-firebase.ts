@@ -4,42 +4,20 @@ import 'rxjs/Rx';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
-import {GooglePlusAuthProvider} from '../google-auth/google-plus-auth';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
-
-const DEFAULT_ROOT_NODE = '/default'
-
-/**
- * UUid Generator Credit to :
- *      https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
- */
-function generateUUID() { // Public Domain/MIT
-  var d = new Date().getTime();
-  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-    d += performance.now(); // use high-precision timer if available
-  }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (d + Math.random() * 16) % 16 | 0;
-    d = Math.floor(d / 16);
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-}
-
+import {DEFAULT_ROOT_NODE, generateUUID, PERSONAL_LISTS_NODE} from '../Utils';
 
 @Injectable()
 export class TodoServiceProviderFireBase {
 
-  private data: AngularFireList<TodoList>;
+  private personalTodoLists: AngularFireList<TodoList>;
   private rootNode: string = null;
 
-
-// TODO : GooglePlusAuthProvider
   constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: ToDoAppGoogleAuthProvider) {
   }
 
-  private getRootNode() {
-
+  public getUserName() {
     if (null === this.rootNode) {
       const fireBaseAuth = this.authProvider.getFirebaseAuth().currentUser;
 
@@ -52,33 +30,31 @@ export class TodoServiceProviderFireBase {
     return this.rootNode;
   }
 
-  public getList(): Observable<any> {
-    this.data = this.angularFireDatabase.list(`${this.getRootNode()}/`);
 
-    return this.data.valueChanges();
+  public getList(): Observable<any> {
+    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}`;
+    this.personalTodoLists = this.angularFireDatabase.list(request);
+
+    return this.personalTodoLists.valueChanges();
+  }
+
+  public getUsersList(): Observable<any> {
+    const request = `/`;
+    return this.angularFireDatabase.list<TodoItem>(request).valueChanges();
   }
 
   public createNewTodoList(todoListName: string) {
     const newTodoList: TodoList = TodoListFactory
       .createNewWithNameAndUUid(todoListName, generateUUID());
-    return this.data.set(newTodoList.uuid, newTodoList);
+    return this.personalTodoLists.set(newTodoList.uuid, newTodoList);
   }
 
   public updateTodoList(todoList: TodoList): Promise<void> {
-    return this.data.update(todoList.uuid, todoList);
+    return this.personalTodoLists.update(todoList.uuid, todoList);
   }
 
   public deleteTodoList(todoList: TodoList) {
-    return this.data.remove(todoList.uuid);
-  }
-
-  public getTodoItems(uuid: string): AngularFireList<TodoItem> {
-    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`);
-  }
-
-  public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
-    return this.angularFireDatabase.list<TodoItem>(`${this.getRootNode()}/${uuid}/items`)
-      .valueChanges();
+    return this.personalTodoLists.remove(todoList.uuid);
   }
 
   public createNewTodo(listUuid: string, newItem: TodoItem) {
@@ -95,10 +71,15 @@ export class TodoServiceProviderFireBase {
     return this.getTodoItems(listUuid).remove(uuid);
   }
 
-  // //Todo: This Function is not used !
-  // public getListByUuid(uuid: string): AngularFireList<TodoList> {
-  //   return this.angularFireDatabase.list(`${ROOT_NODE}/${uuid}/items`);
-  // }
+  public getTodoItemsAsObservable(uuid: string): Observable<TodoItem[]> {
+    return this.getTodoItems(uuid).valueChanges();
+  }
+
+  public getTodoItems(uuid: string): AngularFireList<TodoItem> {
+    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}/${uuid}/items`;
+    return this.angularFireDatabase.list<TodoItem>(request);
+  }
+
 
 }
 

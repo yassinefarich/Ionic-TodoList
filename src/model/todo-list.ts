@@ -4,6 +4,7 @@ export interface TodoList {
   uuid: string;
   name: string;
   items: TodoItem[];
+  shared_with?: string[];
 }
 
 export class TodoListFactory {
@@ -11,7 +12,8 @@ export class TodoListFactory {
     return {
       uuid: uuid,
       name: todoListName,
-      items: new Array<TodoItem>()
+      items: new Array<TodoItem>(),
+      shared_with: new Array<string>(),
     };
   }
 }

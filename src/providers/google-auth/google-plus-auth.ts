@@ -1,14 +1,8 @@
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {GooglePlus} from '@ionic-native/google-plus';
 import firebase from 'firebase';
-import {ToDoAppGoogleAuthProvider} from './google-auth';
 import {GoogleAuthInterface} from './google-auth-i';
-
-const NATIVE_AUTH_OPTION = {
-  'webClientId': '143451751699-i0l7oqlottrluaaol7cdqudbcb531m12.apps.googleusercontent.com',
-  'offline': true
-};
+import {NATIVE_AUTH_OPTION} from '../../fireBase-Settings';
 
 @Injectable()
 export class GooglePlusAuthProvider implements GoogleAuthInterface {
