@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {ActionSheetController, AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
+import {ItemEditorPage} from '../item-editor/item-editor';
+import {ImageProvider} from '../../providers/image/image';
+import {notNullAndNotUndefined} from '../../providers/Utils';
 
 /**
  * Generated class for the ItemListPage page.
@@ -24,6 +27,8 @@ export class ItemListPage implements OnInit {
   private todoListUUid = '';
   private todoListName = 'TodoListName';
   private sharedTodoListURL = '';
+
+  private todoItemsAndImagesURL = new Map();
 
   private todos: TodoItem[];
 
@@ -52,12 +57,13 @@ export class ItemListPage implements OnInit {
     return '' !== this.sharedTodoListURL;
   }
 
-  constructor(public navCtrl: NavController,
-              public alertCtrl: AlertController,
-              public params: NavParams,
-              public listSharingProvider: ListSharingProvider,
-              public todoListService: TodoServiceProviderFireBase,
-              public sharedAlertProvider: SharedAlertProvider) {
+  constructor(private navCtrl: NavController,
+              private params: NavParams,
+              private listSharingProvider: ListSharingProvider,
+              private todoListService: TodoServiceProviderFireBase,
+              private sharedAlertProvider: SharedAlertProvider,
+              private actionSheetCtrl: ActionSheetController,
+              private imageProvider: ImageProvider) {
   }
 
   ionViewDidLoad() {
@@ -77,56 +83,17 @@ export class ItemListPage implements OnInit {
   }
 
 
-  addOrEditItem(todoItem?, item?) {
+  addOrEditItem(todoItem?, selectionItem?) {
 
-    // TODO: Look How to avoir null using NullObjectPattern on Typescript
-    let prompt = null;
+    this.navCtrl.push(ItemEditorPage, {
+      'todoItem': todoItem,
+      'todoListUUid': this.todoListUUid,
+    });
 
-    // Modification d'un Item
-    if (undefined !== todoItem) {
-
-      prompt = this.sharedAlertProvider
-        .buildPromptAlert()
-        .withTitle('Modification de l\'Item')
-        .withMessage('Veuillez entrer les informations de l\'Item')
-        .withInputs([{
-          name: 'name',
-          placeholder: 'name',
-          value: todoItem.name,
-        }])
-        .withOnOkHandler(data => {
-          todoItem.name = data.name;
-          this.todoListService.updateTodo(this.todoListUUid, todoItem)
-          item.close();
-        })
-        .withOnCancelHandler(data => {
-          item.close();
-        })
-        .build();
-    } else {
-      // Creation d'un nouveau Item
-      prompt = this.sharedAlertProvider
-        .buildPromptAlert()
-        .withTitle('Ajouter un nouveau Item')
-        .withMessage('Veuillez entrer les informations de l\'Item')
-        .withInputs([{
-          name: 'name',
-          placeholder: 'name',
-          value: '',
-        }])
-        .withOnOkHandler(data => {
-          this.todoListService.createNewTodo(this.todoListUUid, TodoItemFactory.createNewWithName(data.name))
-        })
-        .withOnCancelHandler(data => {
-        })
-        .build();
-    }
-
-    prompt.present();
+    if (undefined !== selectionItem) selectionItem.close();
   }
 
   markItemAsCompleted(todoItem: TodoItem) {
-
 
     if (this.isSharedList()) {
       this.listSharingProvider.updateTodoByListURL(this.sharedTodoListURL, todoItem);
@@ -134,9 +101,54 @@ export class ItemListPage implements OnInit {
     else {
       this.todoListService.updateTodo(this.todoListUUid, todoItem);
     }
+  }
 
 
+  itemActions(todoItem: TodoItem) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Action sur l\'item',
+      buttons: [
+        {
+          text: todoItem.complete ? 'Non Complet' : 'Complet',//Achevée
+          handler: () => {
+            todoItem.complete = !todoItem.complete;
+            this.markItemAsCompleted(todoItem);
+          }
+        }, {
+          text: 'Modifier',
+          handler: () => {
+            this.addOrEditItem(todoItem)
+          }
+        }, {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: () => {
+            this.deleteItem(todoItem);
+          }
+        }, {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
 
+  getImageURLForItem(todoItem)
+  {
+
+    throw new Error("Methode Not implemented yet");
+
+    this.imageProvider.getImage(this.todoListUUid, todoItem.uuid)
+      .then(url => this.todoItemsAndImagesURL.set(todoItem.uuid , url),
+        error => console.log("No image found for the item ", todoItem.uuid))
+    if(notNullAndNotUndefined(this.todoItemsAndImagesURL.get(todoItem.uuid)))
+    {
+      return
+    }
   }
 
 }

@@ -19,21 +19,39 @@
 
     <ion-item>
       <ion-label stacked>Nom de l'item :</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" [(ngModel)] = 'todoItem.name'></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked >Description</ion-label>
-      <ion-textarea type="textarea"></ion-textarea>
+      <ion-textarea type="textarea" [(ngModel)] = 'todoItem.desc'></ion-textarea>
     </ion-item>
 
   </ion-list>
 
-  <button ion-button color="danger" (click)="selectImage(todoItem)">
+
+  <button ion-button (click)="saveItem()">
+    <ion-icon name="trash"></ion-icon>
+    Sauvegarder
+  </button>
+
+  <button ion-button color="danger" (click)="uploadImage()">
     <ion-icon name="trash"></ion-icon>
     UploadImage
   </button>
 
+  <button ion-button color="danger" (click)="refreshImage()">
+    <ion-icon name="trash"></ion-icon>
+    DownloadImage
+  </button>
+
+  <button *ngIf="!appIsRunningOnWebBrowser" ion-button color="danger" (click)="selectImage()">
+    <ion-icon name="trash"></ion-icon>
+    UploadImage
+  </button>
+
+  <input *ngIf="appIsRunningOnWebBrowser" type="file" (change)="selectImage($event)" class="inputfile">
+  <img style="max-height: 80%;" *ngIf="null !== selectedImageSafeURLPreview" [src]="selectedImageSafeURLPreview" />
 
 
 </ion-content>

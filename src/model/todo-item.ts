@@ -5,8 +5,10 @@ export interface TodoItem {
   desc?: string;
 }
 
+
 export class TodoItemFactory {
-  static createNewWithName(todoName: string): TodoItem {
-    return {name: todoName, complete: false, uuid: '0'};
+  static createNewEmpty(): TodoItem {
+    return {name: '', complete: false, uuid: '0'};
   }
+
 }

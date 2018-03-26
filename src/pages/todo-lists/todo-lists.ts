@@ -117,6 +117,13 @@ export class TodoListsPage implements OnInit {
 
 
   deleteList(todoList) {
+
+    if(null === todoList.uuid || '' === todoList.uuid)
+    {
+      alert("Cannot delete this list !! no uuid")
+      return;
+    }
+
     this.sharedAlertProvider
       .buildConfirmationAlert()
       .withTitle('Confirmation de suppression')

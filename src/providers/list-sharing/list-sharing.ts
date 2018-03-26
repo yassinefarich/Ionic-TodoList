@@ -6,6 +6,7 @@ import {TodoList} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
 import {formatEmail, PERSONAL_LISTS_NODE, SHARED_LISTS_NODE} from '../Utils';
 import {TodoServiceProviderFireBase} from '../todo-service/todo-service-firebase';
+import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
 @Injectable()
 export class ListSharingProvider {
@@ -14,12 +15,14 @@ export class ListSharingProvider {
   private subject = new Rx.Subject();
 
   constructor(private angularFireDatabase: AngularFireDatabase,
-              private todoService: TodoServiceProviderFireBase) {
+              private todoService: TodoServiceProviderFireBase,
+              private authProvider: ToDoAppGoogleAuthProvider
+              ) {
   }
 
   //TODO : If you have time Review This Function -_-
   public getSharedList(): Observable<any> {
-    const request = `${this.todoService.getUserName()}/${SHARED_LISTS_NODE}`;
+    const request = `${this.authProvider.getUserID()}/${SHARED_LISTS_NODE}`;
     this.sharedTodoLists = this.angularFireDatabase.list(request);
 
     return this.sharedTodoLists.valueChanges()
@@ -34,7 +37,7 @@ export class ListSharingProvider {
     let userId = formatEmail(user);
 
     this.angularFireDatabase.list('/' + userId + '/' + SHARED_LISTS_NODE + '/')
-      .set(todoList.uuid, this.todoService.getUserName() + PERSONAL_LISTS_NODE + '/' + todoList.uuid);
+      .set(todoList.uuid, this.authProvider.getUserID() + PERSONAL_LISTS_NODE + '/' + todoList.uuid);
 
     if (undefined === todoList.shared_with) {
       todoList.shared_with = new Array<string>();
@@ -62,6 +65,6 @@ export class ListSharingProvider {
 
 
   getListPath(todoList: any, email: string) {
-    return this.todoService.getUserName() + PERSONAL_LISTS_NODE + '/' + todoList.uuid
+    return this.authProvider.getUserID() + PERSONAL_LISTS_NODE + '/' + todoList.uuid
   }
 }

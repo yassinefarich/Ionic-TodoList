@@ -4,12 +4,14 @@ import {GoogleAuthInterface} from './google-auth-i';
 import {Platform} from 'ionic-angular';
 import {GoogleWebAuthProvider} from './google-web-auth';
 import {GooglePlusAuthProvider} from './google-plus-auth';
+import {DEFAULT_ROOT_NODE} from '../Utils';
 
 // This class is used as a bridge to Google Authentication
 @Injectable()
 export class ToDoAppGoogleAuthProvider {
 
   private authProvider: GoogleAuthInterface = undefined;
+  private userID : string = null ;
 
   constructor(public platform: Platform, private injector: Injector) {
     this.injectAuthProvider();
@@ -34,6 +36,20 @@ export class ToDoAppGoogleAuthProvider {
 
   public getFirebaseAuth(): firebase.auth.Auth {
     return firebase.auth();
+  }
+
+  // TODO : find best way to manage user id's
+  public getUserID() {
+    if (null === this.userID) {
+      const fireBaseAuth = this.getFirebaseAuth().currentUser;
+
+      this.userID = null === fireBaseAuth ? DEFAULT_ROOT_NODE :
+        fireBaseAuth.email
+          .replace('@', '_')
+          .replace('.', '_');
+
+    }
+    return this.userID;
   }
 
   public logIn() {
