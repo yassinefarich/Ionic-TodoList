@@ -18,7 +18,6 @@ export class TabsPage {
   tab1Root = HomePage;
   tab2Root = TodoListsPage;
   tab3Root = LoginPage;
-  tab4Root = ItemEditorPage;
 
   constructor() {
 

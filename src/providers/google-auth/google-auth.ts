@@ -57,7 +57,7 @@ export class ToDoAppGoogleAuthProvider {
   }
 
   public logOut() {
-    return this.authProvider.logIn();
+    return this.authProvider.logOut();
   }
 
 }
