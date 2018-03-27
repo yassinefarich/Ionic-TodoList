@@ -43,11 +43,14 @@ export class ItemListPage implements OnInit {
     if (this.isSharedList()) {
       this.listSharingProvider.getTodoItemsByListURLAsObservable(this.sharedTodoListURL).subscribe(x => {
         this.todos = x;
+        this.refreshImages();
+
       });
     }
     else {
       this.todoListService.getTodoItemsAsObservable(this.todoListUUid).subscribe(x => {
         this.todos = x;
+        this.refreshImages();
       });
     }
 
@@ -137,18 +140,26 @@ export class ItemListPage implements OnInit {
     actionSheet.present();
   }
 
-  getImageURLForItem(todoItem)
-  {
+  // getImageURLForItem(todoItem)
+  // {
+  //
+  //
+  //   this.imageProvider.getImage(this.todoListUUid, todoItem.uuid)
+  //     .then(url => this.todoItemsAndImagesURL.set(todoItem.uuid , url),
+  //       error => console.log("No image found for the item ", todoItem.uuid))
+  //
+  //   if(notNullAndNotUndefined(this.todoItemsAndImagesURL.get(todoItem.uuid)))
+  //   {
+  //     return
+  //   }
+  // }
 
-    throw new Error("Methode Not implemented yet");
-
-    this.imageProvider.getImage(this.todoListUUid, todoItem.uuid)
-      .then(url => this.todoItemsAndImagesURL.set(todoItem.uuid , url),
-        error => console.log("No image found for the item ", todoItem.uuid))
-    if(notNullAndNotUndefined(this.todoItemsAndImagesURL.get(todoItem.uuid)))
-    {
-      return
-    }
+  private refreshImages() {
+    this.todos.forEach(x => {
+      this.imageProvider.getImage(this.todoListUUid, x.uuid)
+        .then(url => x.imageURL = url)
+        .catch(x => x.imageURL = '');
+    });
   }
 
 }

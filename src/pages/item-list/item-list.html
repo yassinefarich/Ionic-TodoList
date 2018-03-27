@@ -24,8 +24,8 @@
       </ion-icon>
 
       <ion-row no-padding>
-        <ion-col style="max-width: 40%">
-          <img src="https://vignette.wikia.nocookie.net/en.futurama/images/1/12/Bender-smoking.jpg"/>
+        <ion-col *ngIf="'' !== todoItem.imageURL" style="max-width: 40%">
+          <img src="{{todoItem.imageURL}}"/>
         </ion-col>
         <ion-col style="max-width: 60%">
 

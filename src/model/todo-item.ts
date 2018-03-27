@@ -3,6 +3,7 @@ export interface TodoItem {
   name: string;
   complete: boolean;
   desc?: string;
+  imageURL?: string;
 }
 
 
