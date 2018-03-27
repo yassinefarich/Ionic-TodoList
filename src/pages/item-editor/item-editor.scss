@@ -2,16 +2,18 @@ page-item-editor {
 
 }
 
-
-.inputfile + label {
-  font-size: 1.25em;
-  font-weight: 700;
-  color: white;
-  background-color: black;
-  display: inline-block;
+.label-file {
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.inputfile:focus + label,
-.inputfile + label:hover {
-  background-color: red;
+.input-file {
+  display: none;
+}
+
+#item-image {
+  max-height: 80%;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }

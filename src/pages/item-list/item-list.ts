@@ -1,14 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {TodoList} from '../../model/todo-list';
-import {TodoServiceProvider} from '../../services/todo-service';
-import {TodoItem, TodoItemFactory} from '../../model/todo-item';
+import {ActionSheetController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {TodoItem} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {SharedAlertProvider} from '../../providers/shared-alert-service/shared-alert';
 import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {ItemEditorPage} from '../item-editor/item-editor';
 import {ImageProvider} from '../../providers/image/image';
-import {notNullAndNotUndefined} from '../../providers/Utils';
 
 /**
  * Generated class for the ItemListPage page.
@@ -139,20 +136,6 @@ export class ItemListPage implements OnInit {
     });
     actionSheet.present();
   }
-
-  // getImageURLForItem(todoItem)
-  // {
-  //
-  //
-  //   this.imageProvider.getImage(this.todoListUUid, todoItem.uuid)
-  //     .then(url => this.todoItemsAndImagesURL.set(todoItem.uuid , url),
-  //       error => console.log("No image found for the item ", todoItem.uuid))
-  //
-  //   if(notNullAndNotUndefined(this.todoItemsAndImagesURL.get(todoItem.uuid)))
-  //   {
-  //     return
-  //   }
-  // }
 
   private refreshImages() {
     this.todos.forEach(x => {
