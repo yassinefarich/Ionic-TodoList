@@ -7,44 +7,45 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Ma liste des Todo</ion-title>
+    <ion-title>{{todoListName}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="cards-bg">
+
+  <ion-card *ngFor="let todoItem of todos" >
 
 
-  <h2 style="text-align: center ; color: #488aff">{{todoListName}} </h2>
-  <ion-list no-lines>
+    <ion-card-content>
 
-    <ion-item-sliding *ngFor="let todoItem of todos" #item>
-      <ion-item>
-        <ion-icon name="ios-arrow-forward" item-start></ion-icon>
-        <ion-label>{{ todoItem.name }}</ion-label>
-        <ion-toggle [(ngModel)]="todoItem.complete" (ionChange)="markItemAsCompleted(todoItem)"></ion-toggle>
+      <ion-icon style="float: right;cursor: pointer; font-size : 30px " (click)="itemActions(todoItem)" name="more">
+      </ion-icon>
 
-        <!--<ion-checkbox [(ngModel)]="todoItem.complete" ></ion-checkbox>-->
-      </ion-item>
+      <ion-row no-padding>
+        <ion-col *ngIf="'' !== todoItem.imageURL" style="max-width: 40%">
+          <img src="{{todoItem.imageURL}}"/>
+        </ion-col>
+        <ion-col style="max-width: 60%">
 
-      <ion-item-options side="right">
-        <button ion-button color="danger" (click)="deleteItem(todoItem)">
-          <ion-icon name=
+          <ion-card-title>
+            {{ todoItem.name }}
 
-                      "trash"></ion-icon>
-          Supprimer
-        </button>
+            <ion-icon *ngIf="todoItem.complete" style="cursor: pointer;margin-left: 3% ; color : #199616; " name="md-checkmark-circle-outline" >
+            </ion-icon>
 
-        <button ion-button (click)="addOrEditItem(todoItem , item)">
-          <ion-icon name="create"></ion-icon>
-          Modifier
-        </button>
+          </ion-card-title>
+          <p>
+            {{ todoItem.desc }}
+          </p>
 
-      </ion-item-options>
-    </ion-item-sliding>
+        </ion-col>
+      </ion-row>
 
-  </ion-list>
+    </ion-card-content>
+
+  </ion-card>
 
 
   <ion-fab right bottom style="padding-right: 2%;" >

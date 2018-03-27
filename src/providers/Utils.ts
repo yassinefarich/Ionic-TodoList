@@ -28,3 +28,8 @@ export function formatEmail(user: string) {
     .replace('@', '_')
     .replace('.', '_');
 }
+
+
+export function notNullAndNotUndefined(object: any): boolean {
+  return !(null === object || undefined === object);
+}

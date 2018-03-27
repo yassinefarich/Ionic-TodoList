@@ -1,0 +1,117 @@
+import {Component, OnInit} from '@angular/core';
+import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {ImageProvider} from '../../providers/image/image';
+import {DomSanitizer} from '@angular/platform-browser';
+import {TodoItem, TodoItemFactory} from '../../model/todo-item';
+import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
+import {generateUUID, notNullAndNotUndefined} from '../../providers/Utils';
+
+
+/**
+ * Generated class for the ItemEditorPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+@IonicPage()
+@Component({
+  selector: 'page-item-editor',
+  templateUrl: 'item-editor.html',
+})
+export class ItemEditorPage implements OnInit {
+
+  todoItem: TodoItem = null;
+  listUUID = 'LIST_NULL';
+  isCreateOperation = true;
+
+  appIsRunningOnWebBrowser = true;
+  selectedImage: string = ''
+  selectedImageSafeURLPreview = null
+  imageFile: File = null;
+
+  constructor(public navCtrl: NavController,
+              public params: NavParams,
+              private imageProvider: ImageProvider,
+              public todoListService: TodoServiceProviderFireBase,
+              public platform: Platform, private domSanitizer: DomSanitizer) {
+  }
+
+  ngOnInit(): void {
+
+    this.appIsRunningOnWebBrowser = this.platform.is('core') || this.platform.is('mobileweb');
+    this.todoItem = this.params.get('todoItem');
+    this.isCreateOperation = !notNullAndNotUndefined(this.todoItem);
+
+    this.todoItem = this.isCreateOperation ? TodoItemFactory.createNewEmpty() : this.todoItem;
+    this.listUUID = this.params.get('todoListUUid');
+
+    this.refreshImage();
+
+  }
+
+  public selectImage(event?: any) {
+
+    if (this.appIsRunningOnWebBrowser) {
+      this.selectImageFromWebBrowser(event.target.files);
+      return;
+    }
+
+    this.imageProvider.selectImage().then(x => {
+        this.selectedImage = x
+        this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(x)
+      }
+    );
+  }
+
+  private selectImageFromWebBrowser(selectedFiles) {
+    this.imageFile = selectedFiles[0];
+    var myReader: FileReader = new FileReader();
+    myReader.onloadend = (e) => {
+      this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(myReader.result);
+    }
+    myReader.readAsDataURL(this.imageFile);
+  }
+
+
+  saveItem() {
+
+    let promiseSaveOrUpdate: Promise<any>;
+
+    if (this.isCreateOperation) {
+      this.todoItem.uuid = generateUUID();
+      promiseSaveOrUpdate = this.todoListService.createNewTodo(this.listUUID, this.todoItem);
+    }
+    else {
+      promiseSaveOrUpdate = this.todoListService.updateTodo(this.listUUID, this.todoItem)
+    }
+    promiseSaveOrUpdate.then(x => this.uploadImage());
+    this.navCtrl.pop();
+  }
+
+
+  refreshImage() {
+    this.imageProvider.getImage(this.listUUID, this.todoItem.uuid)
+      .then(url => this.selectedImageSafeURLPreview = url,
+        error => console.log("No image found for the item ", this.todoItem.uuid))
+  }
+
+
+  uploadImage() {
+    if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.imageFile)) {
+      this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid)
+      return;
+    }
+
+    if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
+      this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid)
+    }
+  }
+
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad ItemEditorPage');
+  }
+
+
+}

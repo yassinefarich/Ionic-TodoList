@@ -47,7 +47,7 @@ export class TodoListsPage implements OnInit {
     // TODO : If you have time , take a look on the instructions below
     this.listSharingProvider.getSharedList().subscribe(x => {
 
-      let index = this.sharedTodoLists.findIndex(d => d[0] === x[0]);
+      let index = this.sharedTodoLists.findIndex(d => d.url === x.url);
       console.log(index)
       if (index >= 0) {
         this.sharedTodoLists[index] = x;
@@ -64,11 +64,11 @@ export class TodoListsPage implements OnInit {
     this.navCtrl.push(ItemListPage, {'idListe': todoList.uuid, 'listName': todoList.name});
   }
 
-  itemSelectedSharedList(todoList: [string, TodoList]) {
+  itemSelectedSharedList(todoList) {
     this.navCtrl.push(ItemListPage, {
-      'idListe': todoList[1].uuid,
-      'listName': todoList[1].name,
-      'listURL': todoList[0]
+      'idListe': todoList.list.uuid,
+      'listName': todoList.list.name,
+      'listURL': todoList.url
     });
   }
 
@@ -117,6 +117,13 @@ export class TodoListsPage implements OnInit {
 
 
   deleteList(todoList) {
+
+    if(null === todoList.uuid || '' === todoList.uuid)
+    {
+      alert("Cannot delete this list !! no uuid")
+      return;
+    }
+
     this.sharedAlertProvider
       .buildConfirmationAlert()
       .withTitle('Confirmation de suppression')

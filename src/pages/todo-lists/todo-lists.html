@@ -71,7 +71,7 @@
 
           <ion-item (click)="itemSelectedSharedList(todoList)">
             <ion-icon name="list" item-start></ion-icon>
-            {{ todoList[1].name}} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList[1])}}</ion-badge>
+            {{ todoList.list.name}} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList.list)}}</ion-badge>
           </ion-item>
 
           <ion-item-options side="right">

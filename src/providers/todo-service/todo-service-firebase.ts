@@ -6,7 +6,7 @@ import {TodoList, TodoListFactory} from '../../model/todo-list';
 import {TodoItem} from '../../model/todo-item';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 
-import {DEFAULT_ROOT_NODE, generateUUID, PERSONAL_LISTS_NODE} from '../Utils';
+import {generateUUID, PERSONAL_LISTS_NODE} from '../Utils';
 
 @Injectable()
 export class TodoServiceProviderFireBase {
@@ -17,22 +17,8 @@ export class TodoServiceProviderFireBase {
   constructor(private angularFireDatabase: AngularFireDatabase, private authProvider: ToDoAppGoogleAuthProvider) {
   }
 
-  public getUserName() {
-    if (null === this.rootNode) {
-      const fireBaseAuth = this.authProvider.getFirebaseAuth().currentUser;
-
-      this.rootNode = null === fireBaseAuth ? DEFAULT_ROOT_NODE :
-        fireBaseAuth.email
-          .replace('@', '_')
-          .replace('.', '_');
-
-    }
-    return this.rootNode;
-  }
-
-
   public getList(): Observable<any> {
-    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}`;
+    const request = `${this.authProvider.getUserID()}/${PERSONAL_LISTS_NODE}`;
     this.personalTodoLists = this.angularFireDatabase.list(request);
 
     return this.personalTodoLists.valueChanges();
@@ -59,7 +45,6 @@ export class TodoServiceProviderFireBase {
 
   public createNewTodo(listUuid: string, newItem: TodoItem) {
     const itemList = this.getTodoItems(listUuid);
-    newItem.uuid = generateUUID();
     return itemList.set(newItem.uuid, newItem);
   }
 
@@ -76,7 +61,7 @@ export class TodoServiceProviderFireBase {
   }
 
   public getTodoItems(uuid: string): AngularFireList<TodoItem> {
-    const request = `${this.getUserName()}/${PERSONAL_LISTS_NODE}/${uuid}/items`;
+    const request = `${this.authProvider.getUserID()}/${PERSONAL_LISTS_NODE}/${uuid}/items`;
     return this.angularFireDatabase.list<TodoItem>(request);
   }
 
