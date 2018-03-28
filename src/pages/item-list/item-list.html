@@ -15,7 +15,7 @@
 
 <ion-content class="cards-bg">
 
-  <ion-card *ngFor="let todoItem of todos" >
+  <ion-card *ngFor="let todoItem of todos">
 
 
     <ion-card-content>
@@ -25,15 +25,16 @@
 
       <ion-row no-padding>
         <ion-col *ngIf="'' !== todoItem.imageURL" style="max-width: 40%">
-          <ion-img src="{{todoItem.imageURL}}"></ion-img>
 
+          <img src="{{todoItem.imageURL}}"/>
         </ion-col>
         <ion-col style="max-width: 60%">
 
           <ion-card-title>
             {{ todoItem.name }}
 
-            <ion-icon *ngIf="todoItem.complete" style="cursor: pointer;margin-left: 3% ; color : #199616; " name="md-checkmark-circle-outline" >
+            <ion-icon *ngIf="todoItem.complete" style="cursor: pointer;margin-left: 3% ; color : #199616; "
+                      name="md-checkmark-circle-outline">
             </ion-icon>
 
           </ion-card-title>
@@ -49,8 +50,10 @@
   </ion-card>
 
 
-  <ion-fab right bottom style="padding-right: 2%;" >
-    <button ion-fab  color="primary" (click)="addOrEditItem()" ><ion-icon name="md-add"></ion-icon></button>
+  <ion-fab right bottom style="padding-right: 2%;">
+    <button ion-fab color="primary" (click)="addOrEditItem()">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
   </ion-fab>
 
 

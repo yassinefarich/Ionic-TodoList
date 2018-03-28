@@ -94,4 +94,5 @@
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="cordova-plugin-filepath" spec="^1.2.0" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
+    <allow-navigation href="http://130.190.76.221:8100" />
 </widget>

@@ -90,6 +90,8 @@ export class ItemListPage implements OnInit {
       'todoItem': todoItem,
       'todoListUUid': this.todoListUUid,
       'todoListUrl': this.sharedTodoListURL,
+      "parentPage": this,
+
 
     });
 
@@ -140,7 +142,7 @@ export class ItemListPage implements OnInit {
     actionSheet.present();
   }
 
-  private refreshImages() {
+  public refreshImages() {
     this.todos.forEach(x => {
       this.imageProvider.getImage(this.todoListUUid, x.uuid ,this.sharedTodoListURL)
         .then(url => x.imageURL = url)

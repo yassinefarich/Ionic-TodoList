@@ -50,22 +50,7 @@ export class ImageProvider {
   uploadImageFromWebBrowser(image: File, listId: string, itemId: string, listURL?: string): any {
 
     let imageRef = this.forgeImageRef(listId, itemId, listURL);
-    let uploadTask = imageRef.put(image);
-
-    uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-      (snapshot) => {
-        // upload in progress
-      },
-      (error) => {
-        // upload failed
-        console.log(error)
-      },
-      () => {
-        alert("The image has benn uploaded :)")
-        // upload success
-      }
-    );
-
+    return imageRef.put(image);
   }
 
   uploadImageFromMobile(image: string, listId: string, itemId: string, listURL?: string): any {
@@ -80,12 +65,12 @@ export class ImageProvider {
   private forgeImageRef(listId: string, itemId: string, listURL?: string) {
 
     let storageRef = firebase.storage().ref();
-    if (notNullAndNotUndefined(listURL) && '' !== listURL) {
-      return storageRef.child(`${listURL}/${itemId}.jpg`);
-    }
-
     let userID = this.authProvider.getUserID();
-    return storageRef.child(`images/${userID}/${listId}/${itemId}.jpg`);
+
+    let imagePath = notNullAndNotUndefined(listURL) && '' !== listURL ? `images/${listURL}/${itemId}.jpg` :
+      `images/${userID}//personal_lists/${listId}/${itemId}.jpg`
+
+    return storageRef.child(imagePath);
 
   }
 

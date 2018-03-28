@@ -34,7 +34,7 @@
           <ion-item (click)="itemSelected(todoList)" >
 
             <ion-icon name="list" item-start></ion-icon>
-            {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
+            {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge> <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
             <button ion-button outline item-end (click)="todoListActions(todoList);$event.stopPropagation()" style="width: 15%">
               <ion-icon name="ios-construct"></ion-icon></button>
 

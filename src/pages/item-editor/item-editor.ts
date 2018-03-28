@@ -7,6 +7,10 @@ import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-ser
 import {generateUUID, notNullAndNotUndefined} from '../../providers/Utils';
 import {ListSharingProvider} from "../../providers/list-sharing/list-sharing";
 
+import * as firebase from 'firebase/app';
+import {ItemListPage} from '../item-list/item-list';
+
+
 
 /**
  * Generated class for the ItemEditorPage page.
@@ -21,6 +25,8 @@ import {ListSharingProvider} from "../../providers/list-sharing/list-sharing";
   templateUrl: 'item-editor.html',
 })
 export class ItemEditorPage implements OnInit {
+
+  parentPage : ItemListPage  = null ;
 
   todoItem: TodoItem = null;
   listUUID = 'LIST_NULL';
@@ -49,6 +55,7 @@ export class ItemEditorPage implements OnInit {
     this.todoItem = this.isCreateOperation ? TodoItemFactory.createNewEmpty() : this.todoItem;
     this.listUUID = this.params.get('todoListUUid');
     this.todoListUrl = this.params.get('todoListUrl');
+    this.parentPage = this.params.get('parentPage');
 
     this.refreshImage();
 
@@ -109,12 +116,29 @@ export class ItemEditorPage implements OnInit {
 
   uploadImage() {
     if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.imageFile)) {
-      this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid , this.todoListUrl)
+
+      this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid, this.todoListUrl)
+        .on(firebase.storage.TaskEvent.STATE_CHANGED,
+          (snapshot) => {
+          },
+          (error) => {
+            console.log(error)
+          },
+          () => {
+
+            this.parentPage.refreshImages();
+            // ItemListPage
+            // this.imageProvider.getImage(this.listUUID, this.todoItem.uuid, this.todoListUrl)
+            //   .then(url => this.todoItem.imageURL = url)
+            //   .catch(x => x.imageURL = '');
+          }
+        );
+
       return;
     }
 
     if (!this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
-      this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid , this.todoListUrl)
+      this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl)
     }
   }
 

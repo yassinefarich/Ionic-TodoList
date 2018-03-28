@@ -58,7 +58,6 @@ export class TodoListsPage implements OnInit {
       else {
         this.sharedTodoLists.push(x);
       }
-      //this.sharedTodoLists = this.sharedTodoLists.filter(d => d[0] !== x[0]);
 
     });
   }
@@ -190,10 +189,10 @@ export class TodoListsPage implements OnInit {
 
   showQRCodeScanner() {
     this.barcodeScanner.scan().then((barcodeData) => {
-      alert(barcodeData.text)
+      this.listSharingProvider.shareListWithCurrentUser(barcodeData.text);
     }, (err) => {
+
       alert(err.toString())
-      // An error occurred
     });
 
   }

@@ -200,3 +200,11 @@ ERROR: src/services/todo-service.ts[112, 15]: != should be !==
 ERROR: src/services/todo-service.ts[113, 30]: missing whitespace
 ERROR: src/services/todo-service.ts[115, 17]: " should be '
 ERROR: src/services/todo-service.ts[115, 29]: Missing semicolon
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

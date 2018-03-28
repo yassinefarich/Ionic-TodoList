@@ -13,7 +13,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {TodoServiceProvider} from '../services/todo-service';
 import {ItemListPageModule} from '../pages/item-list/item-list.module';
 import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
-import {AngularFireModule} from 'angularfire2';
+import {AngularFireModule, FirebaseApp} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {LoginPageModule} from '../pages/login/login.module';
 import {GooglePlus} from '@ionic-native/google-plus';
