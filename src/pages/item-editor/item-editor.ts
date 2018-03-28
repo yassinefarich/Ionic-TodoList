@@ -5,6 +5,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {TodoItem, TodoItemFactory} from '../../model/todo-item';
 import {TodoServiceProviderFireBase} from '../../providers/todo-service/todo-service-firebase';
 import {generateUUID, notNullAndNotUndefined} from '../../providers/Utils';
+import {ListSharingProvider} from "../../providers/list-sharing/list-sharing";
 
 
 /**
@@ -24,6 +25,7 @@ export class ItemEditorPage implements OnInit {
   todoItem: TodoItem = null;
   listUUID = 'LIST_NULL';
   isCreateOperation = true;
+  todoListUrl = '';
 
   appIsRunningOnWebBrowser = true;
   selectedImage: string = ''
@@ -34,7 +36,8 @@ export class ItemEditorPage implements OnInit {
               public params: NavParams,
               private imageProvider: ImageProvider,
               public todoListService: TodoServiceProviderFireBase,
-              public platform: Platform, private domSanitizer: DomSanitizer) {
+              public platform: Platform, private domSanitizer: DomSanitizer,
+              private listSharingProvide  : ListSharingProvider) {
   }
 
   ngOnInit(): void {
@@ -45,6 +48,7 @@ export class ItemEditorPage implements OnInit {
 
     this.todoItem = this.isCreateOperation ? TodoItemFactory.createNewEmpty() : this.todoItem;
     this.listUUID = this.params.get('todoListUUid');
+    this.todoListUrl = this.params.get('todoListUrl');
 
     this.refreshImage();
 
@@ -75,36 +79,42 @@ export class ItemEditorPage implements OnInit {
 
 
   saveItem() {
-
     let promiseSaveOrUpdate: Promise<any>;
-
     if (this.isCreateOperation) {
       this.todoItem.uuid = generateUUID();
-      promiseSaveOrUpdate = this.todoListService.createNewTodo(this.listUUID, this.todoItem);
+
+      promiseSaveOrUpdate = '' === this.todoListUrl ? this.todoListService.createNewTodo(this.listUUID, this.todoItem) :
+        this.listSharingProvide.createTodoByListURL(this.todoListUrl, this.todoItem);
+
     }
     else {
-      promiseSaveOrUpdate = this.todoListService.updateTodo(this.listUUID, this.todoItem)
+
+      promiseSaveOrUpdate = '' === this.todoListUrl ? this.todoListService.updateTodo(this.listUUID, this.todoItem) :
+        this.listSharingProvide.updateTodoByListURL(this.todoListUrl, this.todoItem);
     }
+
     promiseSaveOrUpdate.then(x => this.uploadImage());
+
     this.navCtrl.pop();
   }
 
 
   refreshImage() {
-    this.imageProvider.getImage(this.listUUID, this.todoItem.uuid)
+    this.imageProvider.getImage(this.listUUID, this.todoItem.uuid , this.todoListUrl)
       .then(url => this.selectedImageSafeURLPreview = url,
         error => console.log("No image found for the item ", this.todoItem.uuid))
+      .catch(error => console.log("No image found for the item ", this.todoItem.uuid))
   }
 
 
   uploadImage() {
     if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.imageFile)) {
-      this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid)
+      this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid , this.todoListUrl)
       return;
     }
 
-    if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
-      this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid)
+    if (!this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
+      this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid , this.todoListUrl)
     }
   }
 

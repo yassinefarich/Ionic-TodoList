@@ -1,14 +1,11 @@
 <ion-header>
+
   <ion-navbar>
     <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
-
 <ion-content padding class="login-background">
-
-
-
 
   <ng-template [ngIf]="!userProfile" [ngIfElse]="userLogged">
 
@@ -56,7 +53,7 @@
     </ion-card>
 
     <button ion-button round block outline style="text-align:center;" (click)="showTodoLists()">
-      Voire mes listes
+      Voir mes listes
     </button>
 
   </ng-template>

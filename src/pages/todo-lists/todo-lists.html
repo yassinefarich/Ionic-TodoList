@@ -6,6 +6,7 @@
 -->
 <ion-header>
 
+
   <ion-navbar no-border-bottom>
     <ion-title>Mes listes</ion-title>
   </ion-navbar>
@@ -23,7 +24,7 @@
 
 </ion-header>
 
-  <ion-content>
+  <ion-content  class="login-background" >
     <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
     <div [ngSwitch]="listChoice">
       <ion-list *ngSwitchCase="'personal'" >
@@ -34,7 +35,8 @@
 
             <ion-icon name="list" item-start></ion-icon>
             {{ todoList.name }} <ion-badge item-end>{{ numberOfUncompletedTodos(todoList)}}</ion-badge>
-            <button ion-button outline item-end (click)="shareTodoList(todoList);$event.stopPropagation()">Partager</button>
+            <button ion-button outline item-end (click)="todoListActions(todoList);$event.stopPropagation()" style="width: 15%">
+              <ion-icon name="ios-construct"></ion-icon></button>
 
           </ion-item>
 
@@ -75,16 +77,6 @@
           </ion-item>
 
           <ion-item-options side="right">
-
-            <!--<button ion-button color="danger" (click)="deleteList(todoList)">-->
-            <!--<ion-icon name="trash"></ion-icon>-->
-            <!--Supprimer-->
-            <!--</button>-->
-
-            <!--<button ion-button (click)="addOrEditTodoList(todoList , item)">-->
-            <!--<ion-icon name="create"></ion-icon>-->
-            <!--Modifier-->
-            <!--</button>-->
 
           </ion-item-options>
 

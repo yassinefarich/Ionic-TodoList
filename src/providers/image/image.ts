@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Camera, CameraOptions} from '@ionic-native/camera';
 import * as firebase from 'firebase/app';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
+import {notNullAndNotUndefined} from '../Utils';
 
 /*
   Generated class for the ImageProvider provider.
@@ -16,7 +17,7 @@ export class ImageProvider {
 
   private cameraImage: string
 
-  constructor(private camera: Camera , private authProvider: ToDoAppGoogleAuthProvider) {
+  constructor(private camera: Camera, private authProvider: ToDoAppGoogleAuthProvider) {
     console.log('Hello ImageProvider Provider');
   }
 
@@ -46,9 +47,9 @@ export class ImageProvider {
   }
 
 
-  uploadImageFromWebBrowser(image: File, listId: string, itemId: string): any {
+  uploadImageFromWebBrowser(image: File, listId: string, itemId: string, listURL?: string): any {
 
-    let imageRef = this.forgeImageRef(listId, itemId);
+    let imageRef = this.forgeImageRef(listId, itemId, listURL);
     let uploadTask = imageRef.put(image);
 
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -67,31 +68,25 @@ export class ImageProvider {
 
   }
 
-  uploadImageFromMobile(image: string, listId: string, itemId: string): any {
-    let imageRef = this.forgeImageRef(listId, itemId);
+  uploadImageFromMobile(image: string, listId: string, itemId: string, listURL?: string): any {
+    let imageRef = this.forgeImageRef(listId, itemId, listURL);
     return imageRef.putString(image, 'data_url');
   }
 
-  private forgeImageRef(listId: string, itemId: string) {
-    let storageRef = firebase.storage().ref();
-    let userID = this.authProvider.getUserID() ;
-    alert(userID)
-    return storageRef.child(`${userID}/images/${listId}/${itemId}.jpg`);
+  getImage(listId: string, itemId: string, listURL: string): Promise<any> {
+    return this.forgeImageRef(listId, itemId, listURL).getDownloadURL()
   }
 
+  private forgeImageRef(listId: string, itemId: string, listURL?: string) {
 
-  getImage(listId: string, itemId: string) {
     let storageRef = firebase.storage().ref();
-    let userID = this.authProvider.getUserID() ;
-    let imageRef = storageRef.child(`${userID}/images/${listId}/${itemId}.jpg`);
-    return imageRef.getDownloadURL();
+    if (notNullAndNotUndefined(listURL) && '' !== listURL) {
+      return storageRef.child(`${listURL}/${itemId}.jpg`);
+    }
+
+    let userID = this.authProvider.getUserID();
+    return storageRef.child(`images/${userID}/${listId}/${itemId}.jpg`);
+
   }
-
-  // getImage(userId: string, photoId: string): any {
-  //   let storageRef = firebase.storage().ref();
-  //   let imageRef = storageRef.child(`${userId}/${photoId}`);
-  //   return imageRef.getDownloadURL();
-  // }
-
 
 }

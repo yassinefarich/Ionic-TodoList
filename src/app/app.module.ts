@@ -19,7 +19,6 @@ import {LoginPageModule} from '../pages/login/login.module';
 import {GooglePlus} from '@ionic-native/google-plus';
 import {TodoServiceProviderFireBase} from '../providers/todo-service/todo-service-firebase';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
-import {WebAuthPageModule} from '../pages/web-auth/simple-auth.module';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {ToDoAppGoogleAuthProvider} from '../providers/google-auth/google-auth';
 import {GooglePlusAuthProvider} from '../providers/google-auth/google-plus-auth';
@@ -52,14 +51,13 @@ import { ImageProvider } from '../providers/image/image';
     ItemListPageModule,
     TodoListsPageModule,
     LoginPageModule,
-    WebAuthPageModule,
     SharePageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
     AngularFirestoreModule.enablePersistence(),
     NgxQRCodeModule,
-    ItemEditorPageModule
+    ItemEditorPageModule,
 
   ],
   bootstrap: [IonicApp],

@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {
+  ActionSheetController, AlertController, IonicPage, ModalController, NavController,
+  NavParams
+} from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
@@ -10,6 +13,7 @@ import {SharePage} from '../share/share';
 import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
+import {notNullAndNotUndefined} from '../../providers/Utils';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -35,9 +39,8 @@ export class TodoListsPage implements OnInit {
               private listSharingProvider: ListSharingProvider,
               private todoListService: TodoServiceProviderFireBase,
               private sharedAlertProvider: SharedAlertProvider,
-              private qrScanner: QRScanner,
-              private barcodeScanner: BarcodeScanner
-              ) {
+              private barcodeScanner: BarcodeScanner,
+              public actionSheetCtrl: ActionSheetController) {
   }
 
   ngOnInit(): void {
@@ -88,10 +91,11 @@ export class TodoListsPage implements OnInit {
         .withOnOkHandler(data => {
           todoList.name = data.name;
           this.todoListService.updateTodoList(todoList);
-          item.close();
+
+          if(notNullAndNotUndefined(item))item.close();
         })
         .withOnCancelHandler(data => {
-          item.close();
+          if(notNullAndNotUndefined(item))item.close();
         })
         .build();
     } else {
@@ -118,8 +122,7 @@ export class TodoListsPage implements OnInit {
 
   deleteList(todoList) {
 
-    if(null === todoList.uuid || '' === todoList.uuid)
-    {
+    if (null === todoList.uuid || '' === todoList.uuid) {
       alert("Cannot delete this list !! no uuid")
       return;
     }
@@ -132,6 +135,42 @@ export class TodoListsPage implements OnInit {
       .build()
       .present();
   }
+
+
+  todoListActions(todoList: TodoList) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your album',
+      buttons: [
+        {
+          text: 'Modifier',
+          handler: () => {
+            this.addOrEditTodoList(todoList);
+          }
+        }, {
+          text: 'Partager',
+          handler: () => {
+            this.shareTodoList(todoList);
+          }
+        },
+        {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: () => {
+            this.deleteList(todoList);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
 
   shareTodoList(todoList) {
     let modal = this.modalCtrl.create(SharePage, {'todoList': todoList});
@@ -158,8 +197,6 @@ export class TodoListsPage implements OnInit {
     });
 
   }
-
-
 
 
 }

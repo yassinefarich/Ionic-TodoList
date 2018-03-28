@@ -16,7 +16,6 @@ class Guid {// credit https://gist.github.com/benjamincharity/82ce8651dd53dbee38
 }
 
 
-// TODO: This service
 
 @Injectable()
 export class TodoServiceProvider {
