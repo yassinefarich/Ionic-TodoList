@@ -21,13 +21,18 @@ export class HomePage implements OnInit {
 
   private userProfile: any = null;
 
+  constructor(private navCtrl: NavController,
+              private authProvider: ToDoAppGoogleAuthProvider) {
+  }
+
+
   ngOnInit(): void {
 
-    //TODO : Initialise fireBase according to Platform
-    if (!(this.platform.is('core') || this.platform.is('mobileweb'))) {
+    // Init firebase app ,
+    // this is needed when running app on android fir the first Time
+    if (firebase.apps.length < 1) {
       firebase.initializeApp(FIREBASE_CONFIG);
     }
-
 
     this.authProvider.getFirebaseAuth().onAuthStateChanged(user => {
       if (user) {
@@ -38,10 +43,6 @@ export class HomePage implements OnInit {
     });
 
   }
-
-  constructor(public navCtrl: NavController, private authProvider: ToDoAppGoogleAuthProvider, public platform: Platform) {
-  }
-
 
   logOut() {
     this.authProvider.logOut();

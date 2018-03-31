@@ -38,13 +38,15 @@ export class ListSharingProvider {
     this.angularFireDatabase.object<TodoList>(todoListURL)
       .valueChanges()
       .subscribe(todoList => {
+
         this.angularFireDatabase.list('/' + userId + '/' + SHARED_LISTS_NODE + '/')
           .set(todoList.uuid, todoListURL);
+
         if (undefined === todoList.shared_with) {
           todoList.shared_with = new Array<string>();
         }
-        todoList.shared_with.push(userId);
-        this.todoService.updateTodoList(todoList)
+        //todoList.shared_with.push(userId);
+        //this.todoService.updateTodoList(todoList)
 
       })
 
@@ -85,7 +87,14 @@ export class ListSharingProvider {
     return this.angularFireDatabase.list<TodoItem>(request).valueChanges();
   }
 
+  deleteSharedList(listUUid) {
+    let request = this.authProvider.getUserID() + SHARED_LISTS_NODE;
+    return this.angularFireDatabase.list<TodoItem>(request).remove(listUUid);
+  }
+
   getListPath(todoList: any, email: string) {
     return this.authProvider.getUserID() + PERSONAL_LISTS_NODE + '/' + todoList.uuid
   }
+
+
 }

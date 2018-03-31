@@ -24,9 +24,6 @@ export class ItemListPage implements OnInit {
   private todoListUUid = '';
   private todoListName = 'TodoListName';
   private sharedTodoListURL = '';
-
-  private todoItemsAndImagesURL = new Map();
-
   private todos: TodoItem[];
 
 

@@ -51,7 +51,6 @@ export class TodoListsPage implements OnInit {
     this.listSharingProvider.getSharedList().subscribe(x => {
 
       let index = this.sharedTodoLists.findIndex(d => d.url === x.url);
-      console.log(index)
       if (index >= 0) {
         this.sharedTodoLists[index] = x;
       }
@@ -188,8 +187,18 @@ export class TodoListsPage implements OnInit {
 
 
   showQRCodeScanner() {
+
     this.barcodeScanner.scan().then((barcodeData) => {
       this.listSharingProvider.shareListWithCurrentUser(barcodeData.text);
+
+      this.sharedAlertProvider
+        .buildConfirmationAlert()
+        .withTitle('Liste partagée')
+        .withMessage('Une liste partagée a été ajoutée ')
+        .withOnOkHandler(() => {})
+        .buildWithOneButton()
+        .present();
+
     }, (err) => {
 
       alert(err.toString())
@@ -197,5 +206,17 @@ export class TodoListsPage implements OnInit {
 
   }
 
+  deleteSharedList(sharedList) {
+    this.sharedAlertProvider
+      .buildConfirmationAlert()
+      .withTitle('Confirmation de suppression')
+      .withMessage('Veuillez confirmer la suppression du partage de la liste ?')
+      .withOnOkHandler(() => {
+        this.listSharingProvider.deleteSharedList(sharedList.list.uuid);
+        this.sharedTodoLists = this.sharedTodoLists.filter(x => x.url !== sharedList.url)
+      })
+      .build()
+      .present();
+  }
 
 }

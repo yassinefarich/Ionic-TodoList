@@ -72,6 +72,21 @@ export class ConfirmationAlertBuilder {
     });
 
   }
+
+  public buildWithOneButton() {
+
+    return this.alertCtrl.create({
+      title: this.title,
+      message: this.message,
+      buttons: [
+        {
+          text: 'OK',
+          handler: this.okHandler
+        }
+      ]
+    });
+
+  }
 }
 
 
