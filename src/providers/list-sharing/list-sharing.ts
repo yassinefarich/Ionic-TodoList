@@ -16,8 +16,7 @@ export class ListSharingProvider {
 
   constructor(private angularFireDatabase: AngularFireDatabase,
               private todoService: TodoServiceProviderFireBase,
-              private authProvider: ToDoAppGoogleAuthProvider
-              ) {
+              private authProvider: ToDoAppGoogleAuthProvider) {
   }
 
   //TODO : If you have time Review This Function -_-
@@ -33,7 +32,27 @@ export class ListSharingProvider {
   }
 
 
-  public shareList(todoList: TodoList, user: string = 'default') : Promise<any> {
+  public shareListWithCurrentUser(todoListURL: string) {
+    let userId = this.authProvider.getUserID();
+
+    this.angularFireDatabase.object<TodoList>(todoListURL)
+      .valueChanges()
+      .subscribe(todoList => {
+
+        this.angularFireDatabase.list('/' + userId + '/' + SHARED_LISTS_NODE + '/')
+          .set(todoList.uuid, todoListURL);
+
+        if (undefined === todoList.shared_with) {
+          todoList.shared_with = new Array<string>();
+        }
+        //todoList.shared_with.push(userId);
+        //this.todoService.updateTodoList(todoList)
+
+      })
+
+  }
+
+  public shareList(todoList: TodoList, user: string = 'default'): Promise<any> {
     let userId = formatEmail(user);
 
     this.angularFireDatabase.list('/' + userId + '/' + SHARED_LISTS_NODE + '/')
@@ -47,7 +66,7 @@ export class ListSharingProvider {
     return this.todoService.updateTodoList(todoList);
   }
 
-  public shareListWithCreateCopy(todoList: any, email: string) : Promise<any> {
+  public shareListWithCreateCopy(todoList: any, email: string): Promise<any> {
     let userId = formatEmail(email);
     return this.angularFireDatabase.list('/' + userId + '/' + PERSONAL_LISTS_NODE + '/')
       .set(todoList.uuid, todoList);
@@ -58,13 +77,24 @@ export class ListSharingProvider {
     return this.angularFireDatabase.list<TodoItem>(request).update(todoItem.uuid, todoItem);
   }
 
+  public createTodoByListURL(sharedTodoListURL: string, todoItem: TodoItem): Promise<any> {
+    const request = `${sharedTodoListURL}/items`;
+    return this.angularFireDatabase.list<TodoItem>(request).set(todoItem.uuid, todoItem);
+  }
+
   public getTodoItemsByListURLAsObservable(sharedTodoListURL: string) {
     const request = `${sharedTodoListURL}/items`;
     return this.angularFireDatabase.list<TodoItem>(request).valueChanges();
   }
 
+  deleteSharedList(listUUid) {
+    let request = this.authProvider.getUserID() + SHARED_LISTS_NODE;
+    return this.angularFireDatabase.list<TodoItem>(request).remove(listUUid);
+  }
 
   getListPath(todoList: any, email: string) {
     return this.authProvider.getUserID() + PERSONAL_LISTS_NODE + '/' + todoList.uuid
   }
+
+
 }

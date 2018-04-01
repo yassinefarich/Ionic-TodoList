@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, IonicPage, ModalController, NavController, NavParams} from 'ionic-angular';
+import {
+  ActionSheetController, AlertController, IonicPage, ModalController, NavController,
+  NavParams
+} from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {ItemListPage} from '../item-list/item-list';
@@ -10,6 +13,7 @@ import {SharePage} from '../share/share';
 import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
+import {notNullAndNotUndefined} from '../../providers/Utils';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -27,17 +31,18 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 export class TodoListsPage implements OnInit {
 
   private personalTodoLists: TodoList[];
+
   private listChoice = 'personal';
   private sharedTodoLists = new Array();
+  private myListsfilter : string = '';
 
   constructor(private navCtrl: NavController,
               private modalCtrl: ModalController,
               private listSharingProvider: ListSharingProvider,
               private todoListService: TodoServiceProviderFireBase,
               private sharedAlertProvider: SharedAlertProvider,
-              private qrScanner: QRScanner,
-              private barcodeScanner: BarcodeScanner
-              ) {
+              private barcodeScanner: BarcodeScanner,
+              public actionSheetCtrl: ActionSheetController) {
   }
 
   ngOnInit(): void {
@@ -48,14 +53,12 @@ export class TodoListsPage implements OnInit {
     this.listSharingProvider.getSharedList().subscribe(x => {
 
       let index = this.sharedTodoLists.findIndex(d => d.url === x.url);
-      console.log(index)
       if (index >= 0) {
         this.sharedTodoLists[index] = x;
       }
       else {
         this.sharedTodoLists.push(x);
       }
-      //this.sharedTodoLists = this.sharedTodoLists.filter(d => d[0] !== x[0]);
 
     });
   }
@@ -88,10 +91,11 @@ export class TodoListsPage implements OnInit {
         .withOnOkHandler(data => {
           todoList.name = data.name;
           this.todoListService.updateTodoList(todoList);
-          item.close();
+
+          if(notNullAndNotUndefined(item))item.close();
         })
         .withOnCancelHandler(data => {
-          item.close();
+          if(notNullAndNotUndefined(item))item.close();
         })
         .build();
     } else {
@@ -118,8 +122,7 @@ export class TodoListsPage implements OnInit {
 
   deleteList(todoList) {
 
-    if(null === todoList.uuid || '' === todoList.uuid)
-    {
+    if (null === todoList.uuid || '' === todoList.uuid) {
       alert("Cannot delete this list !! no uuid")
       return;
     }
@@ -132,6 +135,42 @@ export class TodoListsPage implements OnInit {
       .build()
       .present();
   }
+
+
+  todoListActions(todoList: TodoList) {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your album',
+      buttons: [
+        {
+          text: 'Modifier',
+          handler: () => {
+            this.addOrEditTodoList(todoList);
+          }
+        }, {
+          text: 'Partager',
+          handler: () => {
+            this.shareTodoList(todoList);
+          }
+        },
+        {
+          text: 'Supprimer',
+          role: 'destructive',
+          handler: () => {
+            this.deleteList(todoList);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
 
   shareTodoList(todoList) {
     let modal = this.modalCtrl.create(SharePage, {'todoList': todoList});
@@ -150,16 +189,35 @@ export class TodoListsPage implements OnInit {
 
 
   showQRCodeScanner() {
+
     this.barcodeScanner.scan().then((barcodeData) => {
-      alert(barcodeData.text)
+      this.listSharingProvider.shareListWithCurrentUser(barcodeData.text);
+
+      this.sharedAlertProvider
+        .buildConfirmationAlert()
+        .withTitle('Liste partagée')
+        .withMessage('Une liste partagée a été ajoutée ')
+        .withOnOkHandler(() => {})
+        .buildWithOneButton()
+        .present();
+
     }, (err) => {
+
       alert(err.toString())
-      // An error occurred
     });
 
   }
 
-
-
-
+  deleteSharedList(sharedList) {
+    this.sharedAlertProvider
+      .buildConfirmationAlert()
+      .withTitle('Confirmation de suppression')
+      .withMessage('Veuillez confirmer la suppression du partage de la liste ?')
+      .withOnOkHandler(() => {
+        this.listSharingProvider.deleteSharedList(sharedList.list.uuid);
+        this.sharedTodoLists = this.sharedTodoLists.filter(x => x.url !== sharedList.url)
+      })
+      .build()
+      .present();
+  }
 }

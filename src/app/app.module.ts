@@ -13,13 +13,12 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {TodoServiceProvider} from '../services/todo-service';
 import {ItemListPageModule} from '../pages/item-list/item-list.module';
 import {TodoListsPageModule} from '../pages/todo-lists/todo-lists.module';
-import {AngularFireModule} from 'angularfire2';
+import {AngularFireModule, FirebaseApp} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import {LoginPageModule} from '../pages/login/login.module';
 import {GooglePlus} from '@ionic-native/google-plus';
 import {TodoServiceProviderFireBase} from '../providers/todo-service/todo-service-firebase';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
-import {WebAuthPageModule} from '../pages/web-auth/simple-auth.module';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {ToDoAppGoogleAuthProvider} from '../providers/google-auth/google-auth';
 import {GooglePlusAuthProvider} from '../providers/google-auth/google-plus-auth';
@@ -38,6 +37,7 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {ItemEditorPageModule} from '../pages/item-editor/item-editor.module';
 import {Camera} from '@ionic-native/camera';
 import { ImageProvider } from '../providers/image/image';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -45,21 +45,21 @@ import { ImageProvider } from '../providers/image/image';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
   ],
   imports: [
     BrowserModule,
     ItemListPageModule,
     TodoListsPageModule,
     LoginPageModule,
-    WebAuthPageModule,
     SharePageModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
     AngularFirestoreModule.enablePersistence(),
     NgxQRCodeModule,
-    ItemEditorPageModule
+    ItemEditorPageModule,
+    PipesModule
 
   ],
   bootstrap: [IonicApp],

@@ -1,11 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams, Platform} from 'ionic-angular';
 import {TodoServiceProvider} from '../../services/todo-service';
 import {TodoList} from '../../model/todo-list';
 import {ItemListPage} from '../item-list/item-list';
 import {TodoListsPage} from '../todo-lists/todo-lists';
 import {AngularFireDatabase, AngularFireList} from 'angularfire2/database';
 import {LoginPage} from '../login/login';
+import {ToDoAppGoogleAuthProvider} from '../../providers/google-auth/google-auth';
+import {FIREBASE_CONFIG} from '../../fireBase-Settings';
+import {AngularFireModule} from 'angularfire2';
+import * as firebase from 'firebase/app';
 
 
 @Component({
@@ -15,25 +19,43 @@ import {LoginPage} from '../login/login';
 })
 export class HomePage implements OnInit {
 
-  private todoLists: TodoList[];
-  private db;
+  private userProfile: any = null;
+
+  constructor(private navCtrl: NavController,
+              private authProvider: ToDoAppGoogleAuthProvider) {
+  }
+
 
   ngOnInit(): void {
-    this.todoListService.getList().subscribe(x => {
-      this.todoLists = x;
+
+    // Init firebase app ,
+    // this is needed when running app on android fir the first Time
+    if (firebase.apps.length < 1) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    }
+
+    this.authProvider.getFirebaseAuth().onAuthStateChanged(user => {
+      if (user) {
+        this.userProfile = user;
+      } else {
+        this.userProfile = null;
+      }
     });
+
   }
 
-  constructor(public navCtrl: NavController, private todoListService: TodoServiceProvider, private todosDatabase: AngularFireDatabase) {
+  logOut() {
+    this.authProvider.logOut();
   }
+
+  logIn() {
+    this.authProvider.logIn();
+  }
+
 
   showTodoLists() {
     this.navCtrl.push(TodoListsPage);
   }
 
-
-  showLoginPage() {
-    this.navCtrl.push(LoginPage);
-  }
 
 }

@@ -24,13 +24,11 @@ export class ItemListPage implements OnInit {
   private todoListUUid = '';
   private todoListName = 'TodoListName';
   private sharedTodoListURL = '';
-
-  private todoItemsAndImagesURL = new Map();
-
   private todos: TodoItem[];
 
 
   ngOnInit(): void {
+
     this.todoListUUid = this.params.get('idListe');
     this.todoListName = this.params.get('listName');
 
@@ -88,6 +86,10 @@ export class ItemListPage implements OnInit {
     this.navCtrl.push(ItemEditorPage, {
       'todoItem': todoItem,
       'todoListUUid': this.todoListUUid,
+      'todoListUrl': this.sharedTodoListURL,
+      "parentPage": this,
+
+
     });
 
     if (undefined !== selectionItem) selectionItem.close();
@@ -137,9 +139,9 @@ export class ItemListPage implements OnInit {
     actionSheet.present();
   }
 
-  private refreshImages() {
+  public refreshImages() {
     this.todos.forEach(x => {
-      this.imageProvider.getImage(this.todoListUUid, x.uuid)
+      this.imageProvider.getImage(this.todoListUUid, x.uuid ,this.sharedTodoListURL)
         .then(url => x.imageURL = url)
         .catch(x => x.imageURL = '');
     });

@@ -28,7 +28,6 @@ export class LoginPage {
 
   logOut() {
     this.authProvider.logOut();
-    this.authProvider.getFirebaseAuth().signOut();
   }
 
   logIn() {

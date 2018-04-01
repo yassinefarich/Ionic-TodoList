@@ -33,7 +33,6 @@
   <ion-card *ngIf="createdCode">
     <ngx-qrcode [qrc-value]="createdCode"></ngx-qrcode>
     <ion-card-content>
-      <!--<p>Value: {{ createdCode }}</p>-->
     </ion-card-content>
   </ion-card>
 
@@ -56,25 +55,3 @@
   </ion-grid>
 
 </ion-content>
-
-<!--<ion-content padding>-->
-  <!--<ion-item>-->
-    <!--<ion-input type="text" placeholder="MY QR Code data" [(ngModel)]="qrData">-->
-    <!--</ion-input>-->
-  <!--</ion-item>-->
-  <!--&lt;!&ndash;<button ion-button full icon-left (click)="createCode()"><ion-icon name="barcode"></ion-icon>Create Code</button>&ndash;&gt;-->
-  <!--&lt;!&ndash;<button ion-button full icon-left (click)="scanCode()" color="secondary"><ion-icon name="qr-scanner"></ion-icon>Scan Code</button>&ndash;&gt;-->
-
-  <!--<ion-card *ngIf="createdCode">-->
-    <!--<ngx-qrcode [qrc-value]="createdCode"></ngx-qrcode>-->
-    <!--<ion-card-content>-->
-      <!--&lt;!&ndash;<p>Value: {{ createdCode }}</p>&ndash;&gt;-->
-    <!--</ion-card-content>-->
-  <!--</ion-card>-->
-
-  <!--&lt;!&ndash;<ion-card *ngIf="scannedCode">&ndash;&gt;-->
-    <!--&lt;!&ndash;<ion-card-content>&ndash;&gt;-->
-      <!--&lt;!&ndash;Result from Scan: {{ scannedCode }}&ndash;&gt;-->
-    <!--&lt;!&ndash;</ion-card-content>&ndash;&gt;-->
-  <!--&lt;!&ndash;</ion-card>&ndash;&gt;-->
-<!--</ion-content>-->

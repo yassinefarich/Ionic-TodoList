@@ -1,40 +1,61 @@
 <ion-header>
+
   <ion-navbar>
     <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
+<ion-content padding class="login-background" >
 
-<ion-content padding>
+  <ng-template [ngIf]="!userProfile" [ngIfElse]="userLogged">
 
-  <h2 style="text-align: center;padding-top: 15%">Bienvenue dans l'application TODO Liste</h2>
+    <h2 style="text-align: center;padding-top: 20%">Gestionnaire de TODO listes</h2>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <button ion-button (click)="showTodoLists()" style="width: 100%" icon-left>
-          <ion-icon name="ios-list-box-outline"></ion-icon>
-          TODO-Lists
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <button ion-button block outline color="danger" (click)="logIn()" icon-start>
+            <ion-icon name="logo-googleplus"></ion-icon>
+            <p>Se connecter avec Google</p>
+          </button>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ng-template>
+
+  <ng-template #userLogged>
+
+    <ion-card>
+
+      <ion-item>
+        <img [src]="userProfile.photoURL" class="circle-pic">
+      </ion-item>
+
+      <ion-card-content>
+        <ion-card-title>
+          <h2 style="text-align: center;">Bienvenue <p style="font-weight: bold;">{{ userProfile.displayName }}</p></h2>
+        </ion-card-title>
+      </ion-card-content>
+
+      <ion-item style="">
+        <ion-icon name='ios-mail-outline' item-start style="color: #55acee"></ion-icon>
+        <h3>{{ userProfile.email }}</h3>
+      </ion-item>
+
+      <ion-item>
+        <button ion-button color="danger" (click)="logOut()">
+          Deconnexion
         </button>
-      </ion-col>
-      <ion-col>
-        <button ion-button (click)="showLoginPage()" style="width: 100%" icon-left>
-          <ion-icon name="md-person"></ion-icon>
-          Connexion
-        </button>
-      </ion-col>
-    </ion-row>
+      </ion-item>
 
-    <ion-row>
-      <ion-col>
+    </ion-card>
 
-        <img class="img-responsive" src="assets/imgs/note.png" style="padding-top: 5%">
-      </ion-col>
+    <button ion-button round block outline style="text-align:center;" (click)="showTodoLists()">
+      Voir mes listes
+    </button>
 
-
-    </ion-row>
-  </ion-grid>
-
+  </ng-template>
 
 </ion-content>
-

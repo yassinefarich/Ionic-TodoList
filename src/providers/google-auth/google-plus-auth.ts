@@ -3,13 +3,14 @@ import {GooglePlus} from '@ionic-native/google-plus';
 import firebase from 'firebase';
 import {GoogleAuthInterface} from './google-auth-i';
 import {NATIVE_AUTH_OPTION} from '../../fireBase-Settings';
+import {AngularFireAuth} from 'angularfire2/auth';
 
 @Injectable()
 export class GooglePlusAuthProvider implements GoogleAuthInterface {
 
   private simulatedConsole = '';
 
-  constructor(private googlePlus: GooglePlus) {
+  constructor(private googlePlus: GooglePlus , public afAuth: AngularFireAuth) {
     console.log('Hello ToDoAppGoogleAuthProvider Provider');
   }
 
@@ -29,6 +30,7 @@ export class GooglePlusAuthProvider implements GoogleAuthInterface {
   }
 
   logOut(): Promise<any> {
+    this.afAuth.auth.signOut();
     return this.googlePlus.logout();
   }
 
