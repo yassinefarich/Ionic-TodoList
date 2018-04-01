@@ -25,11 +25,11 @@
 </ion-header>
 
   <ion-content  class="login-background" >
-    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="myListsfilter"></ion-searchbar>
     <div [ngSwitch]="listChoice">
       <ion-list *ngSwitchCase="'personal'" >
 
-        <ion-item-sliding *ngFor="let todoList of personalTodoLists" #item>
+        <ion-item-sliding *ngFor="let todoList of personalTodoLists | nameFilter : myListsfilter" #item>
 
           <ion-item (click)="itemSelected(todoList)" >
 
@@ -69,7 +69,7 @@
 
       <ion-list  *ngSwitchCase="'shared'">
 
-        <ion-item-sliding *ngFor="let todoList of sharedTodoLists" #item>
+        <ion-item-sliding *ngFor="let todoList of sharedTodoLists | nameFilter : myListsfilter : 'false'" #item>
 
           <ion-item (click)="itemSelectedSharedList(todoList)">
             <ion-icon name="list" item-start></ion-icon>

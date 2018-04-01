@@ -31,8 +31,10 @@ import {notNullAndNotUndefined} from '../../providers/Utils';
 export class TodoListsPage implements OnInit {
 
   private personalTodoLists: TodoList[];
+
   private listChoice = 'personal';
   private sharedTodoLists = new Array();
+  private myListsfilter : string = '';
 
   constructor(private navCtrl: NavController,
               private modalCtrl: ModalController,
@@ -218,5 +220,4 @@ export class TodoListsPage implements OnInit {
       .build()
       .present();
   }
-
 }

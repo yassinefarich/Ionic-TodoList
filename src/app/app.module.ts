@@ -37,6 +37,7 @@ import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {ItemEditorPageModule} from '../pages/item-editor/item-editor.module';
 import {Camera} from '@ionic-native/camera';
 import { ImageProvider } from '../providers/image/image';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { ImageProvider } from '../providers/image/image';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +59,7 @@ import { ImageProvider } from '../providers/image/image';
     AngularFirestoreModule.enablePersistence(),
     NgxQRCodeModule,
     ItemEditorPageModule,
+    PipesModule
 
   ],
   bootstrap: [IonicApp],
