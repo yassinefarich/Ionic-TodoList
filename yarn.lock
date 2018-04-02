@@ -162,6 +162,10 @@
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-4.6.0.tgz#b47c894611612dd92344421ff5d4689e537eb86e"
 
+"@ionic-native/geolocation@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/geolocation/-/geolocation-4.6.0.tgz#e0bfe9b43c6fd4d555fd80ca6b1245199062e91f"
+
 "@ionic-native/google-plus@^4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@ionic-native/google-plus/-/google-plus-4.5.3.tgz#c129f69016ec70da0e0718b52bed541aeef57baf"
@@ -910,6 +914,10 @@ cordova-plugin-file@^6.0.1:
 cordova-plugin-filepath@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-filepath/-/cordova-plugin-filepath-1.2.0.tgz#63cc36c7610404ab8451cd57f4dc92303a027a48"
+
+cordova-plugin-geolocation@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-geolocation/-/cordova-plugin-geolocation-4.0.1.tgz#4703fa649d2405d25a9a732c99ebf868754a2c04"
 
 cordova-plugin-googleplus@^5.2.1:
   version "5.2.1"

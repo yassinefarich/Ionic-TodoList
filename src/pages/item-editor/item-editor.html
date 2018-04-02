@@ -8,6 +8,14 @@
 
   <ion-navbar>
     <ion-title>Item-Editor</ion-title>
+
+    <ion-buttons end>
+      <button ion-button (click)="saveItem()">
+        Enregistrer
+      </button>
+
+    </ion-buttons>
+
   </ion-navbar>
 
 </ion-header>
@@ -15,47 +23,52 @@
 
 <ion-content padding>
 
-  <ion-list>
+  <ion-list no-lines>
 
     <ion-item>
       <ion-label stacked>Nom de l'item :</ion-label>
-      <ion-input type="text" [(ngModel)] = 'todoItem.name'></ion-input>
+      <ion-input type="text" [(ngModel)] = 'todoItem.name' class="item-desc" ></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked >Description</ion-label>
-      <ion-textarea type="textarea" [(ngModel)] = 'todoItem.desc'></ion-textarea>
+      <ion-textarea autoresize type="textarea" [(ngModel)] = 'todoItem.desc' class="item-desc" ></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+
+      <button ion-button icon-start (click)="putAddressOnDescription()" >
+        <ion-icon name="ios-locate-outline"></ion-icon>
+        Mon adresse
+      </button>
+
+
+    <!--upload image button -->
+
+    <ng-template [ngIf]="!appIsRunningOnWebBrowser" [ngIfElse]="webBrowserButton">
+
+      <button ion-button icon-start color="danger" (click)="selectImage()">
+        <ion-icon name="ios-image"></ion-icon>
+       Image
+      </button>
+
+    </ng-template>
+
+    <ng-template #webBrowserButton>
+
+      <label ion-button icon-start color="secondary" for="file" *ngIf="appIsRunningOnWebBrowser" class="label-file">
+        <ion-icon name="ios-image"></ion-icon>
+        Image
+      </label>
+
+      <input id="file" *ngIf="appIsRunningOnWebBrowser" type="file" (change)="selectImage($event)" class="input-file">
+
+    </ng-template>
+    <!--upload image button -->
+
     </ion-item>
 
   </ion-list>
-
-
-  <button ion-button icon-start (click)="saveItem()">
-    <ion-icon name="ios-document"></ion-icon>
-    Enregistrer
-  </button>
-
-
-  <ng-template [ngIf]="!appIsRunningOnWebBrowser" [ngIfElse]="webBrowserButton">
-
-    <button ion-button icon-start color="danger" (click)="selectImage()">
-      <ion-icon name="ios-image"></ion-icon>
-      Choisir une image
-    </button>
-
-  </ng-template>
-
-  <ng-template #webBrowserButton>
-
-    <label ion-button icon-start color="secondary" for="file" *ngIf="appIsRunningOnWebBrowser" class="label-file">
-      <ion-icon name="ios-image"></ion-icon>
-      Choisir une image
-    </label>
-
-    <input id="file" *ngIf="appIsRunningOnWebBrowser" type="file" (change)="selectImage($event)" class="input-file">
-
-  </ng-template>
-
 
   <img id="item-image" *ngIf="null !== selectedImageSafeURLPreview" [src]="selectedImageSafeURLPreview" />
 

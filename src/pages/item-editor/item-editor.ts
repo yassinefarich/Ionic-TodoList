@@ -9,7 +9,7 @@ import {ListSharingProvider} from "../../providers/list-sharing/list-sharing";
 
 import * as firebase from 'firebase/app';
 import {ItemListPage} from '../item-list/item-list';
-
+import {GeolocProvider} from '../../providers/geoloc/geoloc';
 
 
 /**
@@ -26,7 +26,7 @@ import {ItemListPage} from '../item-list/item-list';
 })
 export class ItemEditorPage implements OnInit {
 
-  parentPage : ItemListPage  = null ;
+  parentPage: ItemListPage = null;
 
   todoItem: TodoItem = null;
   listUUID = 'LIST_NULL';
@@ -43,7 +43,8 @@ export class ItemEditorPage implements OnInit {
               private imageProvider: ImageProvider,
               public todoListService: TodoServiceProviderFireBase,
               public platform: Platform, private domSanitizer: DomSanitizer,
-              private listSharingProvide  : ListSharingProvider) {
+              private listSharingProvide: ListSharingProvider,
+              private geolocation: GeolocProvider) {
   }
 
   ngOnInit(): void {
@@ -107,7 +108,7 @@ export class ItemEditorPage implements OnInit {
 
 
   refreshImage() {
-    this.imageProvider.getImage(this.listUUID, this.todoItem.uuid , this.todoListUrl)
+    this.imageProvider.getImage(this.listUUID, this.todoItem.uuid, this.todoListUrl)
       .then(url => this.selectedImageSafeURLPreview = url,
         error => console.log("No image found for the item ", this.todoItem.uuid))
       .catch(error => console.log("No image found for the item ", this.todoItem.uuid))
@@ -145,6 +146,21 @@ export class ItemEditorPage implements OnInit {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ItemEditorPage');
+  }
+
+  putAddressOnDescription() {
+    this.geolocation.findMyCurrentAddress(x => {
+
+      if ('OK' === x.status) {
+        let wellPrintedAddress = x.results[0].formatted_address;
+        this.todoItem.desc = (notNullAndNotUndefined(this.todoItem.desc) ? this.todoItem.desc : '')
+          + `Adresse : ${wellPrintedAddress}`;
+      }
+      else {
+        alert("Cannot get address .")
+      }
+
+    });
   }
 
 

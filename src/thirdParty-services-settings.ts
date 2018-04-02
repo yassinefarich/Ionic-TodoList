@@ -1,4 +1,4 @@
-// FIREBASE settings
+// Firebase settings
 
 // AF2 Settings
 export const FIREBASE_CONFIG = {
@@ -14,4 +14,9 @@ export const NATIVE_AUTH_OPTION = {
   'webClientId': '143451751699-i0l7oqlottrluaaol7cdqudbcb531m12.apps.googleusercontent.com',
   'offline': false
 };
-// End of FireBase settings
+
+//Google geocoding API
+export const GOOGLE_GEOCODING_API_URL: string = 'https://maps.googleapis.com/maps/api/geocode/json?' +
+  'latlng={latitude},{longitude}&key={api_key}';
+
+export const GOOGLE_GEOCODING_API_KEY: string = 'AIzaSyBSu61z8TeJ6PQHbZM1aMyHVdBYGSc1Dg4';

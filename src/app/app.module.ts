@@ -32,12 +32,15 @@ import {SharePageModule} from '../pages/share/share.module';
 import {ListSharingProvider} from '../providers/list-sharing/list-sharing';
 import {NgxQRCodeModule} from 'ngx-qrcode2';
 import {QRScanner} from '@ionic-native/qr-scanner';
-import {FIREBASE_CONFIG} from '../fireBase-Settings';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {ItemEditorPageModule} from '../pages/item-editor/item-editor.module';
 import {Camera} from '@ionic-native/camera';
 import { ImageProvider } from '../providers/image/image';
 import {PipesModule} from '../pipes/pipes.module';
+import { Geolocation } from '@ionic-native/geolocation';
+import { GeolocProvider } from '../providers/geoloc/geoloc';
+import {HttpClientModule} from '@angular/common/http';
+import {FIREBASE_CONFIG} from '../thirdParty-services-settings';
 
 @NgModule({
   declarations: [
@@ -59,7 +62,8 @@ import {PipesModule} from '../pipes/pipes.module';
     AngularFirestoreModule.enablePersistence(),
     NgxQRCodeModule,
     ItemEditorPageModule,
-    PipesModule
+    PipesModule,
+    HttpClientModule,
 
   ],
   bootstrap: [IonicApp],
@@ -88,7 +92,9 @@ import {PipesModule} from '../pipes/pipes.module';
     QRScanner,
     BarcodeScanner,
     Camera,
-    ImageProvider
+    ImageProvider,
+    Geolocation,
+    GeolocProvider
   ]
 })
 export class AppModule {
