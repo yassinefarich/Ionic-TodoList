@@ -18,8 +18,7 @@ La configuration des services tiers (FireBase et googleMap api) se trouve dans l
 #### Execution dans Android
 
 ```bash
-
-  export PATH=${PATH}:/media/farich/7C2C00612C0018B2/Android/Sdk/platform-tools:/media/farich/7C2C00612C0018B2/Android/Sdk/tools
+  export PATH=${PATH}:[ANDROID_SDK_INSTALL]/Sdk/platform-tools:[ANDROID_SDK_INSTALL]/Sdk/tools
   ionic cordova run android
   
 ```
@@ -27,6 +26,5 @@ La configuration des services tiers (FireBase et googleMap api) se trouve dans l
 #### Clean de l'application si erreur de compilation
 
 ```bash
-
   ionic cordova clean
 ```

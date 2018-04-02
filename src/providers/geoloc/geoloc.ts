@@ -1,11 +1,16 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Geolocation} from '@ionic-native/geolocation';
-import {GOOGLE_GEOCODING_API_KEY, GOOGLE_GEOCODING_API_URL} from '../../thirdParty-services-settings';
+import {
+  GOOGLE_GEOCODING_API_KEY, GOOGLE_GEOCODING_API_URL,
+  GOOGLE_MAP_IMAGE_API_URL
+} from '../../thirdParty-services-settings';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
 
 
-function forgeGeoCodingURL(latitude: number, longitude: number) {
-  return GOOGLE_GEOCODING_API_URL
+function forgeGeoCodingURL(baseURL : string ,latitude: number, longitude: number) {
+  return baseURL
     .replace('{latitude}', latitude.toString())
     .replace('{longitude}', longitude.toString())
     .replace('{api_key}', GOOGLE_GEOCODING_API_KEY);
@@ -20,8 +25,22 @@ function forgeGeoCodingURL(latitude: number, longitude: number) {
 @Injectable()
 export class GeolocProvider {
 
+  respSubject: Subject<string> = new Subject()
+
   constructor(public http: HttpClient, private geolocation: Geolocation) {
     console.log('Hello GeolocProvider Provider');
+  }
+
+  public getGoogleMapImageOfMyLocation(): Observable<string> {
+
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.respSubject.next(forgeGeoCodingURL(GOOGLE_MAP_IMAGE_API_URL, resp.coords.latitude, resp.coords.longitude))
+    }).catch((error) => {
+
+    });
+
+    return this.respSubject;
   }
 
   public findMyCurrentAddress(callback: any) {
@@ -36,7 +55,7 @@ export class GeolocProvider {
   }
 
   private resolveAddressFromGeoCoordinates(latitude: number, longitude: number, callback: any) {
-    this.http.get(forgeGeoCodingURL(latitude, longitude)).subscribe(callback);
+    this.http.get(forgeGeoCodingURL(GOOGLE_GEOCODING_API_URL, latitude, longitude)).subscribe(callback);
   }
 
 }

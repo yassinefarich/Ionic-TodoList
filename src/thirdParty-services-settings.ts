@@ -19,4 +19,7 @@ export const NATIVE_AUTH_OPTION = {
 export const GOOGLE_GEOCODING_API_URL: string = 'https://maps.googleapis.com/maps/api/geocode/json?' +
   'latlng={latitude},{longitude}&key={api_key}';
 
+export const GOOGLE_MAP_IMAGE_API_URL : string ='https://maps.googleapis.com/maps/api/staticmap?' +
+  'center={latitude},{longitude}&zoom=12&size=400x400&key={api_key}'
+
 export const GOOGLE_GEOCODING_API_KEY: string = 'AIzaSyBSu61z8TeJ6PQHbZM1aMyHVdBYGSc1Dg4';
