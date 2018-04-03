@@ -13,7 +13,7 @@
 </ion-header>
 
 
-<ion-content class="cards-bg">
+<ion-content class="login-background">
 
   <ion-card *ngFor="let todoItem of todos">
 
@@ -38,9 +38,9 @@
             </ion-icon>
 
           </ion-card-title>
-          <p>
-            {{ todoItem.desc }}
-          </p>
+          <div Markdown>
+              {{ todoItem.desc }}
+          </div>
 
         </ion-col>
       </ion-row>

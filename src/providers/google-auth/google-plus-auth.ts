@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {GooglePlus} from '@ionic-native/google-plus';
 import firebase from 'firebase';
 import {GoogleAuthInterface} from './google-auth-i';
-import {NATIVE_AUTH_OPTION} from '../../fireBase-Settings';
 import {AngularFireAuth} from 'angularfire2/auth';
+import {NATIVE_AUTH_OPTION} from '../../thirdParty-services-settings';
 
 @Injectable()
 export class GooglePlusAuthProvider implements GoogleAuthInterface {

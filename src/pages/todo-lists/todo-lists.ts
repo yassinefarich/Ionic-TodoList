@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  ActionSheetController, AlertController, IonicPage, ModalController, NavController,
+  ActionSheetController, AlertController, IonicPage, LoadingController, ModalController, NavController,
   NavParams
 } from 'ionic-angular';
 import {TodoList} from '../../model/todo-list';
@@ -14,6 +14,7 @@ import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {notNullAndNotUndefined} from '../../providers/Utils';
+import {LoginPage} from '../login/login';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -34,7 +35,8 @@ export class TodoListsPage implements OnInit {
 
   private listChoice = 'personal';
   private sharedTodoLists = new Array();
-  private myListsfilter : string = '';
+  private myListsfilter: string = '';
+  private loader: any;
 
   constructor(private navCtrl: NavController,
               private modalCtrl: ModalController,
@@ -42,12 +44,16 @@ export class TodoListsPage implements OnInit {
               private todoListService: TodoServiceProviderFireBase,
               private sharedAlertProvider: SharedAlertProvider,
               private barcodeScanner: BarcodeScanner,
-              public actionSheetCtrl: ActionSheetController) {
+              private actionSheetCtrl: ActionSheetController,
+              private loadingCtrl: LoadingController) {
   }
 
   ngOnInit(): void {
+    this.showLoadingIndicator();
+
     this.todoListService.getList().subscribe(x => {
       this.personalTodoLists = x;
+      this.loader.dismiss();
     });
     // TODO : If you have time , take a look on the instructions below
     this.listSharingProvider.getSharedList().subscribe(x => {
@@ -92,10 +98,10 @@ export class TodoListsPage implements OnInit {
           todoList.name = data.name;
           this.todoListService.updateTodoList(todoList);
 
-          if(notNullAndNotUndefined(item))item.close();
+          if (notNullAndNotUndefined(item)) item.close();
         })
         .withOnCancelHandler(data => {
-          if(notNullAndNotUndefined(item))item.close();
+          if (notNullAndNotUndefined(item)) item.close();
         })
         .build();
     } else {
@@ -197,7 +203,8 @@ export class TodoListsPage implements OnInit {
         .buildConfirmationAlert()
         .withTitle('Liste partagée')
         .withMessage('Une liste partagée a été ajoutée ')
-        .withOnOkHandler(() => {})
+        .withOnOkHandler(() => {
+        })
         .buildWithOneButton()
         .present();
 
@@ -220,4 +227,18 @@ export class TodoListsPage implements OnInit {
       .build()
       .present();
   }
+
+  showLoadingIndicator() {
+    this.loader = this.loadingCtrl.create({
+      content: "Chargement...",
+      duration: 15000
+    });
+
+    this.loader.present();
+  }
+
+  showMyProfilePage(){
+    this.navCtrl.push(LoginPage);
+  }
+
 }

@@ -3,6 +3,9 @@ import {Camera, CameraOptions} from '@ionic-native/camera';
 import * as firebase from 'firebase/app';
 import {ToDoAppGoogleAuthProvider} from '../google-auth/google-auth';
 import {notNullAndNotUndefined} from '../Utils';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ResponseContentType} from '@angular/http';
+import {Subject} from 'rxjs/Subject';
 
 /*
   Generated class for the ImageProvider provider.
@@ -17,7 +20,7 @@ export class ImageProvider {
 
   private cameraImage: string
 
-  constructor(private camera: Camera, private authProvider: ToDoAppGoogleAuthProvider) {
+  constructor(private camera: Camera, private authProvider: ToDoAppGoogleAuthProvider , public http: HttpClient) {
     console.log('Hello ImageProvider Provider');
   }
 
@@ -71,6 +74,26 @@ export class ImageProvider {
       `images/${userID}//personal_lists/${listId}/${itemId}.jpg`
 
     return storageRef.child(imagePath);
+
+  }
+
+  public getBase64ImageFromUrl(imageUrl) {
+
+    let resultSubject: Subject<string> = new Subject()
+
+    this.http.get(imageUrl, {responseType: 'blob'}).subscribe(x => {
+        let result = '';
+        var reader = new FileReader();
+        reader.readAsDataURL(x);
+        reader.onloadend = function () {
+          result = reader.result;
+          resultSubject.next(result);
+
+        }
+      }
+    )
+
+    return resultSubject;
 
   }
 

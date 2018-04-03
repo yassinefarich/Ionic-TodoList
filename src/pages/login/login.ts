@@ -1,10 +1,6 @@
-import {Component, Injector} from '@angular/core';
-import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
-import {GooglePlus} from '@ionic-native/google-plus';
-import firebase from 'firebase';
+import {Component} from '@angular/core';
+import {IonicPage} from 'ionic-angular';
 import {ToDoAppGoogleAuthProvider} from '../../providers/google-auth/google-auth';
-import {GoogleWebAuthProvider} from '../../providers/google-auth/google-web-auth';
-import {GooglePlusAuthProvider} from '../../providers/google-auth/google-plus-auth';
 
 @IonicPage()
 @Component({
