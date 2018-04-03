@@ -12,7 +12,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="login-background" >
 
   <span *ngIf="!userProfile">
 
@@ -38,12 +38,16 @@
     <ion-item>
       <ion-icon name='ios-person-outline' item-start style="color: #14911c"></ion-icon>
       <h3>{{ userProfile.displayName }}</h3>
-      <!--<ion-badge item-end>9</ion-badge>-->
     </ion-item>
 
     <ion-item style="">
       <ion-icon name='ios-mail-outline' item-start style="color: #55acee"></ion-icon>
       <h3>{{ userProfile.email }}</h3>
+    </ion-item>
+
+    <ion-item style="">
+      <ion-icon name='ios-call' item-start style="color: #55acee"></ion-icon>
+      <h3>{{ userProfile.phoneNumber }}</h3>
     </ion-item>
 
     <ion-item>
@@ -53,21 +57,6 @@
     </ion-item>
 
   </ion-card>
-
-  <button ion-button block color="danger" (click)="findLocation()" icon-start>
-    <ion-icon name="logo-googleplus"></ion-icon>
-    <p>Find Location Baby</p>
-  </button>
-
-  <!--<ion-item *ngIf="userProfile">-->
-  <!--<h3>Utilisateur connecté</h3>-->
-
-  <!--<ion-avatar item-left>-->
-  <!--<img [src]="userProfile.photoURL">-->
-  <!--</ion-avatar>-->
-  <!--<h2>{{ userProfile.displayName }}</h2>-->
-  <!--<h3>{{ userProfile.email }}</h3>-->
-  <!--</ion-item>-->
 
 
 </ion-content>

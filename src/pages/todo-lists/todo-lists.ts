@@ -14,6 +14,7 @@ import {ListSharingProvider} from '../../providers/list-sharing/list-sharing';
 import {QRScanner, QRScannerStatus} from '@ionic-native/qr-scanner';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner';
 import {notNullAndNotUndefined} from '../../providers/Utils';
+import {LoginPage} from '../login/login';
 
 /**
  * Generated class for the TodoListsPage page.
@@ -234,6 +235,10 @@ export class TodoListsPage implements OnInit {
     });
 
     this.loader.present();
+  }
+
+  showMyProfilePage(){
+    this.navCtrl.push(LoginPage);
   }
 
 }

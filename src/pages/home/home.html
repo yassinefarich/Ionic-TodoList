@@ -27,7 +27,9 @@
 
   <ng-template #userLogged>
 
-    <ion-card>
+    <ion-card style="margin-top: 20%;-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;">
 
       <ion-item>
         <img [src]="userProfile.photoURL" class="circle-pic">
@@ -39,21 +41,16 @@
         </ion-card-title>
       </ion-card-content>
 
-      <ion-item style="">
-        <ion-icon name='ios-mail-outline' item-start style="color: #55acee"></ion-icon>
-        <h3>{{ userProfile.email }}</h3>
-      </ion-item>
-
-      <ion-item>
-        <button ion-button color="danger" (click)="logOut()">
-          Deconnexion
-        </button>
-      </ion-item>
-
     </ion-card>
 
-    <button ion-button round block outline style="text-align:center;" (click)="showTodoLists()">
+    <button ion-button round block outline style="text-align:center;width: 90%;margin-left: auto;
+    margin-right: auto;" (click)="showTodoLists()">
       Voir mes listes
+    </button>
+
+    <button ion-button round block outline color="danger" style="text-align:center;width: 90%;margin-left: auto;
+    margin-right: auto;" (click)="logOut()">
+      Deconnexion
     </button>
 
   </ng-template>

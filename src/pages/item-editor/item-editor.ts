@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 import {ImageProvider} from '../../providers/image/image';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -26,6 +26,7 @@ import {GeolocProvider} from '../../providers/geoloc/geoloc';
 })
 export class ItemEditorPage implements OnInit {
 
+
   parentPage: ItemListPage = null;
 
   todoItem: TodoItem = null;
@@ -38,6 +39,7 @@ export class ItemEditorPage implements OnInit {
   selectedImageSafeURLPreview = null
   imageFile: File = null;
   imageFromGoogleMap = false;
+  @ViewChild('description') description: ElementRef;
 
 
   constructor(public navCtrl: NavController,
