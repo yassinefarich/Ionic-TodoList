@@ -10,10 +10,13 @@ import {Observable} from 'rxjs/Observable';
 
 
 function forgeGeoCodingURL(baseURL : string ,latitude: number, longitude: number) {
+
+
+
   return baseURL
-    .replace('{latitude}', latitude.toString())
-    .replace('{longitude}', longitude.toString())
-    .replace('{api_key}', GOOGLE_GEOCODING_API_KEY);
+    .replace(/{latitude}/gi, latitude.toString())
+    .replace(/{longitude}/gi, longitude.toString())
+    .replace(/{api_key}/gi, GOOGLE_GEOCODING_API_KEY);
 }
 
 /*
@@ -35,7 +38,10 @@ export class GeolocProvider {
 
 
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.respSubject.next(forgeGeoCodingURL(GOOGLE_MAP_IMAGE_API_URL, resp.coords.latitude, resp.coords.longitude))
+
+      let mapURL = forgeGeoCodingURL(GOOGLE_MAP_IMAGE_API_URL, resp.coords.latitude, resp.coords.longitude);
+     console.log(mapURL)
+      this.respSubject.next(mapURL)
     }).catch((error) => {
 
     });
@@ -51,6 +57,7 @@ export class GeolocProvider {
 
     }).catch((error) => {
       console.log('Error getting location', error);
+      alert("Impossible d'avoir les coordonnées GPS")
     });
   }
 

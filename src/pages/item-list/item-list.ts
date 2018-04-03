@@ -70,6 +70,12 @@ export class ItemListPage implements OnInit {
 
   deleteItem(todoItem: TodoItem) {
 
+    //TODO : Not implemented yet
+    if (this.isSharedList()) {
+      alert("Suppression non autorisé !")
+      return;
+    }
+
     return this.sharedAlertProvider
       .buildConfirmationAlert()
       .withTitle('Confirmation de suppression')

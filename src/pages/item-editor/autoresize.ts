@@ -21,7 +21,15 @@ export class Autoresize {
     let ta = this.element.nativeElement.querySelector("textarea");
 
     if (ta) {
-      ta.style.overflow = "hidden";
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + "px";
+    }
+  }
+
+  ngAfterViewInit(){
+    let ta = this.element.nativeElement.querySelector("textarea");
+
+    if (ta) {
       ta.style.height = "auto";
       ta.style.height = ta.scrollHeight + "px";
     }

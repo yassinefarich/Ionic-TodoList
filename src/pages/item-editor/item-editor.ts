@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AlertController, IonicPage, NavController, NavParams, Platform, ToastController} from 'ionic-angular';
 import {ImageProvider} from '../../providers/image/image';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TodoItem, TodoItemFactory} from '../../model/todo-item';
@@ -27,20 +27,17 @@ import {GeolocProvider} from '../../providers/geoloc/geoloc';
 export class ItemEditorPage implements OnInit {
 
 
-  parentPage: ItemListPage = null;
-
-  todoItem: TodoItem = null;
-  listUUID = 'LIST_NULL';
-  isCreateOperation = true;
-  todoListUrl = '';
-
-  appIsRunningOnWebBrowser = true;
-  selectedImage: string = ''
-  selectedImageSafeURLPreview = null
-  imageFile: File = null;
-  imageFromGoogleMap = false;
-  @ViewChild('description') description: ElementRef;
-
+  private parentPage: ItemListPage = null;
+  private todoItem: TodoItem = null;
+  private listUUID = 'LIST_NULL';
+  private isCreateOperation = true;
+  private todoListUrl = '';
+  private appIsRunningOnWebBrowser = true;
+  private selectedImage: string = '';
+  private selectedImageSafeURLPreview = null;
+  private imageFile: File = null;
+  private imageFromGoogleMap = false;
+  private imageLoadingtoast = null;
 
   constructor(public navCtrl: NavController,
               public params: NavParams,
@@ -49,7 +46,8 @@ export class ItemEditorPage implements OnInit {
               public platform: Platform, private domSanitizer: DomSanitizer,
               private listSharingProvide: ListSharingProvider,
               private geolocation: GeolocProvider,
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController,
+              private toastCtrl: ToastController) {
   }
 
   ngOnInit(): void {
@@ -63,33 +61,20 @@ export class ItemEditorPage implements OnInit {
     this.todoListUrl = this.params.get('todoListUrl');
     this.parentPage = this.params.get('parentPage');
 
+    this.imageLoadingtoast = this.toastCtrl.create({
+      message: 'Le chargement de l\'image est en cours',
+      showCloseButton: true,
+      closeButtonText: 'Ok',
+      position: 'button'
+    });
+
     this.refreshImage();
 
   }
 
-  public selectImage(event?: any) {
-
-    if (this.appIsRunningOnWebBrowser) {
-      this.selectImageFromWebBrowser(event.target.files);
-      return;
-    }
-
-    this.imageProvider.selectImage().then(x => {
-        this.selectedImage = x
-        this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(x)
-      }
-    );
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad ItemEditorPage');
   }
-
-  private selectImageFromWebBrowser(selectedFiles) {
-    this.imageFile = selectedFiles[0];
-    var myReader: FileReader = new FileReader();
-    myReader.onloadend = (e) => {
-      this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(myReader.result);
-    }
-    myReader.readAsDataURL(this.imageFile);
-  }
-
 
   saveItem() {
     let promiseSaveOrUpdate: Promise<any>;
@@ -111,6 +96,19 @@ export class ItemEditorPage implements OnInit {
     this.navCtrl.pop();
   }
 
+  public selectImage(event?: any) {
+
+    if (this.appIsRunningOnWebBrowser) {
+      this.selectImageFromWebBrowser(event.target.files);
+      return;
+    }
+
+    this.imageProvider.selectImage().then(x => {
+        this.selectedImage = x;
+        this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(x)
+      }
+    );
+  }
 
   refreshImage() {
     this.imageProvider.getImage(this.listUUID, this.todoItem.uuid, this.todoListUrl)
@@ -119,16 +117,17 @@ export class ItemEditorPage implements OnInit {
       .catch(error => console.log("No image found for the item ", this.todoItem.uuid))
   }
 
-
   uploadImage() {
+
+    this.imageLoadingtoast.present();
 
     if (this.imageFromGoogleMap) {
       let googleImageURL = this.selectedImageSafeURLPreview;
       this.imageProvider.getBase64ImageFromUrl(googleImageURL)
         .subscribe(x => {
-          this.selectedImage = x
+          this.selectedImage = x;
 
-          this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl)
+          this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl);
           this.imageFromGoogleMap = false;
         })
     }
@@ -145,6 +144,7 @@ export class ItemEditorPage implements OnInit {
           },
           () => {
             this.parentPage.refreshImages();
+            this.imageLoadingtoast.dismiss();
           }
         );
 
@@ -153,12 +153,8 @@ export class ItemEditorPage implements OnInit {
 
     if (!this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
       this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl)
+        .then(x => this.imageLoadingtoast.dismiss())
     }
-  }
-
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ItemEditorPage');
   }
 
 //TODO : Add this alert to AlertBuilder if you have Time
@@ -212,16 +208,24 @@ export class ItemEditorPage implements OnInit {
     });
   }
 
-
   putAddressOnImage() {
 
     this.geolocation.getGoogleMapImageOfMyLocation().subscribe(
       url => {
-        console.log(url)
-        this.selectedImageSafeURLPreview = url
+        console.log(url);
+        this.selectedImageSafeURLPreview = url;
         this.imageFromGoogleMap = true;
       }
     )
+  }
+
+  selectImageFromWebBrowser(selectedFiles) {
+    this.imageFile = selectedFiles[0];
+    var myReader: FileReader = new FileReader();
+    myReader.onloadend = (e) => {
+      this.selectedImageSafeURLPreview = this.domSanitizer.bypassSecurityTrustUrl(myReader.result);
+    };
+    myReader.readAsDataURL(this.imageFile);
   }
 
 

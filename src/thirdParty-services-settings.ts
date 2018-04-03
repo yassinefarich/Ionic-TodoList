@@ -20,6 +20,6 @@ export const GOOGLE_GEOCODING_API_URL: string = 'https://maps.googleapis.com/map
   'latlng={latitude},{longitude}&key={api_key}';
 
 export const GOOGLE_MAP_IMAGE_API_URL : string ='https://maps.googleapis.com/maps/api/staticmap?' +
-  'center={latitude},{longitude}&zoom=12&size=400x400&key={api_key}'
+  'center={latitude},{longitude}&zoom=15&size=400x400&markers=color:red%7Clabel:MaPosition%7C{latitude},{longitude}&key={api_key}'
 
 export const GOOGLE_GEOCODING_API_KEY: string = 'AIzaSyBSu61z8TeJ6PQHbZM1aMyHVdBYGSc1Dg4';
