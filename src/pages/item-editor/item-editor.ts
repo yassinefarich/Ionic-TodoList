@@ -119,9 +119,10 @@ export class ItemEditorPage implements OnInit {
 
   uploadImage() {
 
-    this.imageLoadingtoast.present();
+
 
     if (this.imageFromGoogleMap) {
+      this.imageLoadingtoast.present();
       let googleImageURL = this.selectedImageSafeURLPreview;
       this.imageProvider.getBase64ImageFromUrl(googleImageURL)
         .subscribe(x => {
@@ -134,7 +135,7 @@ export class ItemEditorPage implements OnInit {
 
 
     if (this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.imageFile)) {
-
+      this.imageLoadingtoast.present();
       this.imageProvider.uploadImageFromWebBrowser(this.imageFile, this.listUUID, this.todoItem.uuid, this.todoListUrl)
         .on(firebase.storage.TaskEvent.STATE_CHANGED,
           (snapshot) => {
@@ -152,6 +153,7 @@ export class ItemEditorPage implements OnInit {
     }
 
     if (!this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
+      this.imageLoadingtoast.present();
       this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl)
         .then(x => this.imageLoadingtoast.dismiss())
     }
