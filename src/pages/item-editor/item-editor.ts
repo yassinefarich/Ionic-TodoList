@@ -155,7 +155,10 @@ export class ItemEditorPage implements OnInit {
     if (!this.appIsRunningOnWebBrowser && notNullAndNotUndefined(this.selectedImage)) {
       this.imageLoadingtoast.present();
       this.imageProvider.uploadImageFromMobile(this.selectedImage, this.listUUID, this.todoItem.uuid, this.todoListUrl)
-        .then(x => this.imageLoadingtoast.dismiss())
+        .then(x => {
+          this.parentPage.refreshImages();
+          this.imageLoadingtoast.dismiss();
+        })
     }
   }
 
