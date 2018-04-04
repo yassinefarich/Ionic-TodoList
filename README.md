@@ -7,13 +7,12 @@
 
 ### Liste des fonctionnalités implémentées
   
-  - Application qui tourne sur mobile
-  - SSO avec Google ou Facebook
+  - SSO avec Google
   - Stockage des données dans firebase
   - Partage de liste
   - Image d'Item
-  - Géolocalisation
-  - Support de **Markdown**
+  - Géolocalisation et determination d'adress
+  - Support de Markdown
 
 ### Confguartion de l'application
 
