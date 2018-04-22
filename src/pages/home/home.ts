@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
 
   logOut() {
     this.authProvider.logOut();
-    this.userProfile = null;
+    //this.userProfile = null;
   }
 
   logInUsingDemo() {
@@ -55,7 +55,7 @@ export class HomePage implements OnInit {
 
 
   logIn() {
-    this.userProfile.logIn();
+    this.authProvider.logIn();
   }
 
 
