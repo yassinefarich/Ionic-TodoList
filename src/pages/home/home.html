@@ -5,11 +5,11 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="login-background" >
+<ion-content padding class="login-background">
 
   <ng-template [ngIf]="!userProfile" [ngIfElse]="userLogged">
 
-    <h2 style="text-align: center;padding-top: 20%">Gestionnaire de TODO listes</h2>
+    <h2 style="text-align: center;padding-top: 20%">Gestionnaire des Todo-Lists</h2>
 
     <ion-grid>
       <ion-row>
@@ -21,6 +21,17 @@
 
         </ion-col>
       </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <button ion-button block outline color="dark" (click)="logInUsingDemo()" icon-start>
+            <ion-icon name="ios-contact"></ion-icon>
+            <p>Demo</p>
+          </button>
+
+        </ion-col>
+      </ion-row>
+
     </ion-grid>
 
   </ng-template>

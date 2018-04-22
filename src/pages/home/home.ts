@@ -24,7 +24,7 @@ export class HomePage implements OnInit {
   ngOnInit(): void {
 
     /** Init firebase app :
-     this is needed when running app on android fir the first Time
+     this is needed when running app on android for the first Time
      */
     if (firebase.apps.length < 1) {
       firebase.initializeApp(FIREBASE_CONFIG);
@@ -42,10 +42,20 @@ export class HomePage implements OnInit {
 
   logOut() {
     this.authProvider.logOut();
+    this.userProfile = null;
   }
 
+  logInUsingDemo() {
+    this.userProfile = {
+      email: 'demo@demo.com',
+      displayName: 'Demo User',
+      photoURL: 'https://image.ibb.co/eP08eH/04e3cf941acd1d64eb42aa3cced37d11.jpg'
+    }
+  }
+
+
   logIn() {
-    this.authProvider.logIn();
+    this.userProfile.logIn();
   }
 
 

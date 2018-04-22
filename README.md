@@ -1,44 +1,42 @@
-# Projet Application mobile avec Ionic
-
-> Réalisé par  : Yassine Farich , Chiraz Limayem
->
-> Encadré par : Mathieu Roger , Alexandre Demeure
+# Simple TodoList Mobile application 
+This is a Simple TodoList projet developped using Ionic3 , firebase and AngularFire2 
 
 
-### Liste des fonctionnalités implémentées
+### Implemented Features
   
-  - SSO avec Google
-  - Stockage des données dans firebase
-  - Partage de liste
-  - Image d'Item
-  - Géolocalisation et determination d'adress
-  - Support de Markdown
+  - Authentication using Google accounts
+  - FireBase data Storage
+  - Share TodoLists between Users
+  - Add Images to TodoItems
+  - Geoloc and address resolving  
+  - Markdown Support
 
-### Confguartion de l'application
+### Configurations
 
-La configuration des services Tiers (FireBase ou googleMap api) se trouve dans le fichier :
+The configuration of The 3th party services(FireBase , googleMap api) can be configured in the file :
 
    ``[PROJECT_DIR]/src/thirdParty-services-settings.ts``
 
 
-### Exécution de l'application
+### Running the application
 
-#### Exécution en locale (Navigateur WEB)
+#### On the Web browser
 
 ```bash
+  yarn install
   ionic serve -l
 ```
 
-#### Exécution en android
+#### On android
 
 ```bash
   export PATH=${PATH}:[ANDROID_SDK_INSTALL]/Sdk/platform-tools:[ANDROID_SDK_INSTALL]/Sdk/tools
   ionic cordova run android
 ```
 
-**Attention:** Ne pas utiliser le paramètres `--livereload` , ce paramètre simule une exécution en navigateur ce qui bloque les fonctionnalités natives
+**Note:** using `--livereload` when the application is running on Android blocks some native functionality.
 
-#### Clean de l'application si erreur de compilation
+#### Project Clean
 
 ```bash
   ionic cordova clean
